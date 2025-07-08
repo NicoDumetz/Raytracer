@@ -82,14 +82,11 @@ void RayTracer::SceneParser::parseMaterials(const libconfig::Setting& root)
     for (int i = 0; i < materials.getLength(); i++) {
         const auto& mat = materials[i];
         Utils::ConfigNode node(Utils::ConfigNode::ConfigType::MATERIAL, mat["name"]);
-        node.setField("type", mat["type"]);
-        if (mat.exists("color"))
-            node.setField("color", formatColor(mat["color"]));
-        if (mat.exists("ior")) {
-                float ior;
-                mat.lookupValue("ior", ior);  // plus sûr
-                node.setField("ior", std::to_string(ior));
-            }
+
+        for (const auto& [fieldName, handler] : _materialFieldHandlers) {
+            if (mat.exists(fieldName.c_str()))
+                handler(node, mat[fieldName.c_str()]);
+        }
         _nodes.push_back(node);
     }
 }

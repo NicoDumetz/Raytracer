@@ -8,7 +8,6 @@
 #pragma once
 
 #include <cmath>
-#include <ostream>
 
 namespace math
 {
@@ -42,9 +41,4 @@ public:
     Vector3D operator/(double scalar) const;
     void operator/=(double scalar);
 };
-inline std::ostream& operator<<(std::ostream& os, const Vector3D& vec)
-{
-    os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ")";
-    return os;
-}
 }
