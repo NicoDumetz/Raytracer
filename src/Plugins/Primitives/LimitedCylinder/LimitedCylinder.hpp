@@ -25,11 +25,20 @@ public:
 
     bool hit(const Utils::Ray& ray, Utils::HitRecord& record) const override;
 
+    const Utils::AABB getBoundingBox() const {return calculateBox();};
 private:
     double _radius;
     double _height;
     double _minY;
     double _maxY;
+
+    Utils::AABB calculateBox() const
+    {
+        math::Vector3D min = math::Vector3D(_position.x - _radius, _position.y + _minY, _position.z - _radius);
+        math::Vector3D max = math::Vector3D(_position.x + _radius, _position.y + _maxY, _position.z + _radius);
+
+        return Utils::AABB(min, max);
+    }
 };
 
 }
