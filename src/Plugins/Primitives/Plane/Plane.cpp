@@ -7,8 +7,7 @@
 
 #include "Plane.hpp"
 
-namespace Primitive
-{
+namespace Primitive {
 
 Plane::Plane(std::shared_ptr<Material::IMaterial> material,
              math::Point3D point,
@@ -49,6 +48,7 @@ void Plane::applyTransform(const math::TransformMatrix &transform)
 }
 
 } // namespace Primitive
+
 
 extern "C" {
 

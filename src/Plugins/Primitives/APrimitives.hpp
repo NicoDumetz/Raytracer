@@ -20,6 +20,8 @@ namespace Primitive
 {
     class APrimitive : public IPrimitive {
     protected:
+        math::TransformMatrix _transform;
+        math::TransformMatrix _inverseTransform;
         std::shared_ptr<Material::IMaterial> _material;
         math::Point3D _position;
     public:
@@ -27,13 +29,16 @@ namespace Primitive
             : _material(std::move(material)), _position(position) {};
         ~APrimitive() = default;
         const Material::IMaterial &getMaterial() const { return *_material; }
-        void setMaterial(std::unique_ptr<Material::IMaterial> material) {
+        void setMaterial(std::shared_ptr<Material::IMaterial> material) {
             _material = std::move(material);
         }
         const math::Point3D& getPosition() const { return _position; }
         void setPosition(const math::Point3D& pos) { _position = pos; }
-
         virtual bool hit(const Utils::Ray& ray, Utils::HitRecord& record) const = 0;
-        virtual void applyTransform(const math::TransformMatrix& transform) = 0;
+        virtual void applyTransform(const math::TransformMatrix& M) {
+            _transform = M * _transform;
+            _inverseTransform = _transform.inverse();
+        }
+        
     };
 } // namespace Raytracer

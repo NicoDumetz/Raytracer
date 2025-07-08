@@ -22,5 +22,6 @@ public:
     ~Ray() = default;
     math::Point3D getOrigin() const { return O; }
     math::Vector3D getDirection() const { return D; }
+    math::Point3D at(double t) const {return O + D * t;}
 };
 } // namespace RayTracer

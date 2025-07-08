@@ -23,7 +23,7 @@ namespace RayTracer
           _antialiasingSamples(antialiasingSamples)
     {}
     
-    bool Scene::trace(Utils::Ray& ray, Utils::HitRecord& record) const {
+    bool Scene::trace(const Utils::Ray& ray, Utils::HitRecord& record) const {
         Utils::HitRecord tempRecord;
         bool hitAnything = false;
         double closest = std::numeric_limits<double>::infinity();
