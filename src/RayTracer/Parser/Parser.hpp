@@ -52,7 +52,22 @@ namespace RayTracer {
             {"height", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
                 float height = static_cast<float>(static_cast<int>(setting));
                 node.setField("height", std::to_string(height));
-            }}
+            }},
+            {"translate", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("translate", formatVector(setting));
+            }},
+            {"rotateX", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float angle = static_cast<float>((double)setting);
+                node.setField("rotateX", std::to_string(angle));
+            }},
+            {"rotateY", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float angle = static_cast<float>((double)setting);
+                node.setField("rotateY", std::to_string(angle));
+            }},
+            {"rotateZ", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float angle = static_cast<float>((double)setting);
+                node.setField("rotateZ", std::to_string(angle));
+            }},
         };
 
         const std::unordered_map<std::string, FieldHandler> _lightFieldHandlers = {
