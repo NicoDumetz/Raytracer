@@ -45,6 +45,7 @@ namespace RayTracer
 
         void handleMaterial(const Utils::ConfigNode& node);
         void handleGlobalSettings(const Utils::ConfigNode& node);
+        void handlePrimitive(const Utils::ConfigNode& node);
         AntialiasingType parseAntialiasingType(const std::string& str);
 
 
@@ -64,8 +65,8 @@ namespace RayTracer
         const std::unordered_map<Utils::ConfigNode::ConfigType, std::function<void(const Utils::ConfigNode&)>> _handlers = {
             {Utils::ConfigNode::ConfigType::MATERIAL, [this](const Utils::ConfigNode& node)
                 {this->handleMaterial(node);}},
-            {Utils::ConfigNode::ConfigType::PRIMITIVE, [this](const Utils::ConfigNode& node)
-                {this->handleGenericVector(node, _primitiveFactory, _primitives);}},
+                {Utils::ConfigNode::ConfigType::PRIMITIVE, [this](const Utils::ConfigNode& node)
+                    {this->handlePrimitive(node);}},
             {Utils::ConfigNode::ConfigType::LIGHT, [this](const Utils::ConfigNode& node)
                 {this->handleGenericVector(node, _lightFactory, _lights);}},
             {Utils::ConfigNode::ConfigType::CAMERA, [this](const Utils::ConfigNode& node)

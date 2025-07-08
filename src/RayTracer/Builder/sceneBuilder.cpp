@@ -55,6 +55,18 @@ void RayTracer::SceneBuilder::handleMaterial(const Utils::ConfigNode& node)
     _materials[node.getName()] = std::move(material);
 }
 
+void RayTracer::SceneBuilder::handlePrimitive(const Utils::ConfigNode& node)
+{
+    Utils::ConfigNode copy = node;
+
+    const std::string& matName = copy.get("material");
+    auto it = _materials.find(matName);
+    if (it == _materials.end())
+        throw std::runtime_error("[SceneBuilder] Material '" + matName + "' not found for primitive '" + copy.getName() + "'.");
+    copy.setMaterial(it->second);
+    _primitives.push_back(_primitiveFactory->create(copy));
+}
+
 void RayTracer::SceneBuilder::handleGlobalSettings(const Utils::ConfigNode& node)
 {
     if (node.has("backgroundColor")) {

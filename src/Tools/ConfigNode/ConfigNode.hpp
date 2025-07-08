@@ -13,6 +13,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <memory>
+#include "Interface/IMaterial.hpp"
 
 namespace Utils
 {
@@ -39,9 +40,14 @@ namespace Utils
         const std::unordered_map<std::string, std::string>& getFields() const {return _fields;}
         void setField(const std::string& key, const std::string& value) {_fields[key] = value;}
 
+        void setMaterial(std::shared_ptr<Material::IMaterial> material) {_material = std::move(material);}
+        const std::shared_ptr<Material::IMaterial>& getMaterial() const {return _material;}
+
+
     private:
         ConfigType _type;
         std::string _name;
         std::unordered_map<std::string, std::string> _fields;
+        std::shared_ptr<Material::IMaterial> _material;
     };
 }
