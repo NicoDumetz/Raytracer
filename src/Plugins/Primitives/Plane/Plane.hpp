@@ -13,6 +13,8 @@
 #include "Tools/HitRecord/HitRecord.hpp"
 #include "Plugins/Primitives/APrimitives.hpp"
 #include "Tools/ConfigNode/ConfigNode.hpp"
+#include "Shared/LibraryType.hpp"
+#include "Factory/Factory.hpp"
 
 namespace Primitive
 {

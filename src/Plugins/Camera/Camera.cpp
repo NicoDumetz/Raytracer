@@ -52,3 +52,24 @@ Utils::Ray Cam::Camera::generateRay(int x, int y) const
         (_forward + _right * screenX + _up * screenY).normalized();
     return Utils::Ray(_position, direction);
 }
+
+extern "C" {
+
+    void registerPlugin(RayTracer::Factory<Cam::ICamera>& factory)
+    {
+        factory.addCreator("camera", [](const Utils::ConfigNode& node) {
+            return std::make_unique<Cam::Camera>(node);
+        });
+    }
+
+    RayTracer::Ltype type()
+    {
+        return RayTracer::Ltype::CAMERA;
+    }
+
+    const char* name()
+    {
+        return "camera";
+    }
+
+}

@@ -48,6 +48,10 @@ namespace RayTracer {
             {"radius", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
                 float radius = static_cast<float>(static_cast<int>(setting));
                 node.setField("radius", std::to_string(radius));
+            }},
+            {"height", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float height = static_cast<float>(static_cast<int>(setting));
+                node.setField("height", std::to_string(height));
             }}
         };
 

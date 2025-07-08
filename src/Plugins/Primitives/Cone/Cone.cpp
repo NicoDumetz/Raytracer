@@ -17,7 +17,7 @@ Cone::Cone(std::shared_ptr<Material::IMaterial> material,
 {}
 
 Cone::Cone(const Utils::ConfigNode& node)
-    : APrimitive(node.getMaterial(), node.parsePoint3D("point"))
+    : APrimitive(node.getMaterial(), node.parsePoint3D("center"))
 {
     _apex = _position;
 
@@ -109,3 +109,24 @@ bool Cone::hitBottomCap(
 }
 
 } // namespace Primitive
+
+extern "C" {
+
+    void registerPlugin(RayTracer::Factory<Primitive::IPrimitive>& factory)
+    {
+        factory.addCreator("cone", [](const Utils::ConfigNode& node) {
+            return std::make_unique<Primitive::Cone>(node);
+        });
+    }
+
+    RayTracer::Ltype type()
+    {
+        return RayTracer::Ltype::PRIMITIVE;
+    }
+
+    const char* name()
+    {
+        return "cone";
+    }
+
+}

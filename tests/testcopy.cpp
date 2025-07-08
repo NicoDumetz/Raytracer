@@ -10,7 +10,6 @@
 #include "Plugins/Primitives/Cone/Cone.hpp"
 #include "Plugins/Primitives/Cylinder/Cylinder.hpp"
 #include "Plugins/Primitives/Plane/Plane.hpp"
-#include "Plugins/Material/Glass/Glass.hpp"
 #include "Plugins/Material/FlatColor/FlatColor.hpp"
 #include "Plugins/Light/DirectionnalLight/DirectionnalLight.hpp"
 #include "Plugins/Light/AmbientLight/AmbientLight.hpp"
@@ -40,11 +39,6 @@ int main() {
     auto floorMat = std::make_shared<Material::FlatColor>(Utils::Color(0.9f, 0.2f, 0.4f, 1.0f));
     auto wallMat  = std::make_shared<Material::FlatColor>(Utils::Color(0.2f, 1.0f, 0.5f, 1.0f));
     auto wallBlue = std::make_shared<Material::FlatColor>(Utils::Color(0.3f, 0.3f, 1.0f, 1.0f));
-    auto glass = std::make_shared<Material::Glass>(
-        Utils::Color(1.0f, 1.0f, 1.0f, 1.0f),
-        1.5f
-    );
-    
 
     // === PRIMITIVES ===
     std::vector<std::shared_ptr<Primitive::IPrimitive>> primitives;
@@ -54,7 +48,6 @@ int main() {
     math::TransformMatrix trans;
     trans.rotateAroundPointY(sphere1->getPosition(), 45.0 * M_PI / 180.0); // Rotation Y autour du centre
     trans.applyTranslation(math::Vector3D(0, 200.0f, 0)); // Translation en Y
-    //trans.applyScaling(math::Vector3D(2, 2, 2));
     sphere1->applyTransform(trans); // Application
     primitives.push_back(sphere1);
 
@@ -81,15 +74,15 @@ int main() {
     primitives.push_back(cylindre);
 
     // Murs : arrière et gauche
-    primitives.push_back(std::make_shared<Primitive::Plane>(glass,  math::Point3D(0.0f, 0.0f, 600.0f),  math::Vector3D(0.0f, 0.0f, -1.0f)));
+    primitives.push_back(std::make_shared<Primitive::Plane>(wallMat,  math::Point3D(0.0f, 0.0f, 600.0f),  math::Vector3D(0.0f, 0.0f, -1.0f)));
     primitives.push_back(std::make_shared<Primitive::Plane>(wallBlue, math::Point3D(-500.0f, 0.0f, 0.0f), math::Vector3D(1.0f, 0.0f, 0.0f)));
 
     // === LUMIÈRES ===
     std::vector<std::shared_ptr<Light::ILight>> lights = {
         std::make_shared<Light::DirectionalLight>(math::Vector3D(0.0f, -1.0f, 2.0f), Utils::Color(0.8f, 0.3f, 0.7f, 1.0f)),
-        //std::make_shared<Light::DirectionalLight>(math::Vector3D(-1.0f, -1.0f, 2.0f), Utils::Color(0.2f, 1.0f, 0.5f, 1.0f)),
+        std::make_shared<Light::DirectionalLight>(math::Vector3D(-1.0f, -1.0f, 2.0f), Utils::Color(0.2f, 1.0f, 0.5f, 1.0f)),
         std::make_shared<Light::DirectionalLight>(math::Vector3D(-1.0f, 0.0f, 0.0f), Utils::Color(1.0f, 1.0f, 0.5f, 1.0f)),
-        //std::make_shared<Light::AmbientLight>(Utils::Color(0.3f, 0.3f, 0.3f, 1.0f))
+        std::make_shared<Light::AmbientLight>(Utils::Color(0.3f, 0.3f, 0.3f, 1.0f))
     };
 
     // === SCÈNE ===
@@ -97,13 +90,20 @@ int main() {
     const auto& sceneCam = scene.getCamera(); // Caméra utilisée
 
     // === RENDU ===
-    std::vector<std::vector<Utils::Color>> pixelArray(res.height, std::vector<Utils::Color>(res.width));
+    std::vector<std::vector<Utils::HitRecord>> hitArray(res.height, std::vector<Utils::HitRecord>(res.width));
     for (int y = 0; y < res.height; ++y) {
         for (int x = 0; x < res.width; ++x) {
-            pixelArray[y][x] = lightManager.traceRay(
-                sceneCam.generateRay(x, y), scene, 3);
+            Utils::Ray ray = sceneCam.generateRay(x, y); // Génère un rayon pour chaque pixel
+            Utils::HitRecord record;
+            if (scene.trace(ray, record)) {
+                Utils::Color color = lightManager.computeLighting(record, scene, ray); // Lumière appliquée
+                record.setColor(color);
+                hitArray[y][x] = record;
+            } else {
+                hitArray[y][x] = Utils::HitRecord(); // Arrière-plan
             }
         }
+    }
 
     // === AFFICHAGE AVEC SFML ===
     Renderer::SFMLRenderer sfml;
@@ -111,7 +111,7 @@ int main() {
     while (sfml.isOpen()) {
         while (sfml.pollEvent()) {} // Gestion des événements
         sfml.clean(); // Efface l'écran
-        sfml.drawPixelArray(pixelArray); // Affiche les pixels
+        sfml.drawPixelArray(hitArray); // Affiche les pixels
         sfml.display(); // Met à jour la fenêtre
     }
 
