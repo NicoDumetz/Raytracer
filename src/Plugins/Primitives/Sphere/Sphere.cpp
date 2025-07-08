@@ -22,11 +22,14 @@ Sphere::Sphere(const Utils::ConfigNode& node)
     _radius = std::stof(node.get("radius"));
 }
 
-bool Primitive::Sphere::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
+bool Sphere::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
 {
-    math::Vector3D oc = ray.getOrigin() - _position;
-    double a = ray.getDirection().dot(ray.getDirection());
-    double b = 2.0 * oc.dot(ray.getDirection());
+    Utils::Ray localRay = _inverseTransform.transform(ray);
+
+    math::Vector3D oc = localRay.getOrigin() - _position;
+
+    double a = localRay.getDirection().dot(localRay.getDirection());
+    double b = 2.0 * oc.dot(localRay.getDirection());
     double c = oc.dot(oc) - _radius * _radius;
     double discriminant = b * b - 4 * a * c;
 
@@ -36,31 +39,28 @@ bool Primitive::Sphere::hit(const Utils::Ray &ray, Utils::HitRecord &record) con
     double sqrt_d = std::sqrt(discriminant);
     double t1 = (-b - sqrt_d) / (2 * a);
     double t2 = (-b + sqrt_d) / (2 * a);
-    double t = -1;
-
-    if (t1 > 0.001)
-        t = t1;
-    else if (t2 > 0.001)
-        t = t2;
+    double t = (t1 > 0.001) ? t1 : (t2 > 0.001 ? t2 : -1.0);
 
     if (t < 0)
         return false;
 
-    math::Point3D hitPos = ray.getOrigin() + ray.getDirection() * t;
-    math::Vector3D normal = (hitPos - _position).normalized();
+    math::Point3D localHit = localRay.at(t);
+    math::Point3D worldHit = _transform.transform(localHit);
+    math::Vector3D localNormal = (localHit - _position).normalized();
+    math::Vector3D worldNormal = _transform.rotateVector(localNormal).normalized();
 
-    record.setDistance(t);
-    record.setPosition(hitPos);
-    record.setNormal(normal);
+    record.setDistance((worldHit - ray.getOrigin()).length());
+    record.setPosition(worldHit);
+    record.setNormal(worldNormal);
     record.setMaterial(_material);
     return true;
 }
-void Sphere::applyTransform(const math::TransformMatrix &transform)
-{
-    _position = transform.transform(_position);
-    math::Vector3D scaled = transform.transform(math::Vector3D(_radius, 0, 0));
-    _radius = scaled.length();
-}
+// void Sphere::applyTransform(const math::TransformMatrix &transform)
+// {
+//     _position = transform.transform(_position);
+//     math::Vector3D scaled = transform.transform(math::Vector3D(_radius, 0, 0));
+//     _radius = scaled.length();
+// }
 } // namespace RayTracer
 
 extern "C" {

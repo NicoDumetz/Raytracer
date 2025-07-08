@@ -109,3 +109,24 @@ bool Cone::hitBottomCap(
 }
 
 } // namespace Primitive
+
+extern "C" {
+
+    void registerPlugin(RayTracer::Factory<Primitive::IPrimitive>& factory)
+    {
+        factory.addCreator("cone", [](const Utils::ConfigNode& node) {
+            return std::make_unique<Primitive::Cone>(node);
+        });
+    }
+
+    RayTracer::Ltype type()
+    {
+        return RayTracer::Ltype::PRIMITIVE;
+    }
+
+    const char* name()
+    {
+        return "cone";
+    }
+
+}
