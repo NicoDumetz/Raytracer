@@ -12,6 +12,7 @@
 #include "Tools/Ray/Ray.hpp"
 #include "Tools/HitRecord/HitRecord.hpp"
 #include "Plugins/Primitives/APrimitives.hpp"
+#include "Tools/ConfigNode/ConfigNode.hpp"
 
 namespace Primitive
 {
@@ -21,6 +22,7 @@ namespace Primitive
         Plane(std::shared_ptr<Material::IMaterial> material,
               math::Point3D point,
               math::Vector3D normal);
+        Plane(const Utils::ConfigNode& node);
         ~Plane() = default;
 
         bool hit(const Utils::Ray &ray, Utils::HitRecord &record) const override;

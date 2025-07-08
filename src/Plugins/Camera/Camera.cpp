@@ -20,6 +20,20 @@ Cam::Camera::Camera(Resolution res,
     _up = _right.cross(_forward).normalized();
 }
 
+Cam::Camera::Camera(const Utils::ConfigNode& node)
+{
+    if (!node.has("width") || !node.has("height") || !node.has("position") || !node.has("target") || !node.has("up") || !node.has("fov"))
+        throw std::runtime_error("[Camera] Missing required fields in config node.");
+    _resolution = {std::stoi(node.get("width")), std::stoi(node.get("height"))};
+    _position = node.parsePoint3D("position");
+    _up = node.parseVector3("up");
+    _fov = std::stof(node.get("fov"));
+    _forward = (node.parsePoint3D("target") - _position).normalized();
+    _right = _forward.cross(_up).normalized();
+    _up = _right.cross(_forward).normalized();
+}
+
+
 Utils::Ray Cam::Camera::generateRay(int x, int y) const
 {
     float aspectRatio = static_cast<float>(_resolution.width) / _resolution.height;

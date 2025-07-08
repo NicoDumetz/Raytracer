@@ -30,3 +30,9 @@ Utils::Color Light::DirectionalLight::illuminate(const Utils::HitRecord& hit, co
         );
         
 }
+
+Light::DirectionalLight::DirectionalLight(const Utils::ConfigNode& node)
+    : _direction(node.parseVector3("direction").normalized()),
+      _intensity(node.parseColor("color"))
+{
+}

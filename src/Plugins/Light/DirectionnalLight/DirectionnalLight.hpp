@@ -11,6 +11,7 @@
 #include "Tools/Ray/Ray.hpp"
 #include "RayTracer/Scene/Scene.hpp"
 #include <cmath>
+#include "Tools/ConfigNode/ConfigNode.hpp"
 
 namespace Light {
 
@@ -18,6 +19,7 @@ namespace Light {
     public:
         DirectionalLight(const math::Vector3D& direction, const Utils::Color& intensity)
             : _direction(direction.normalized()), _intensity(intensity) {}
+        DirectionalLight(const Utils::ConfigNode& node);
         Utils::Color illuminate(const Utils::HitRecord& hit, const RayTracer::Scene& scene) const;
     private:
         math::Vector3D _direction;

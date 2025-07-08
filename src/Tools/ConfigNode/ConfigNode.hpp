@@ -43,6 +43,11 @@ namespace Utils
         void setMaterial(std::shared_ptr<Material::IMaterial> material) {_material = std::move(material);}
         const std::shared_ptr<Material::IMaterial>& getMaterial() const {return _material;}
 
+        Utils::Color parseColor(const std::string& field) const;
+        math::Vector3D parseVector3(const std::string& field) const;
+        math::Point3D parsePoint3D(const std::string& field) const;
+        float parseFloat(const std::string& field) const;
+        int parseInt(const std::string& field) const;
 
     private:
         ConfigType _type;

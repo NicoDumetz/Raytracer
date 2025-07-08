@@ -14,6 +14,14 @@ Sphere::Sphere(std::shared_ptr<Material::IMaterial> material,
     double radius = 0)
 : APrimitive(std::move(material), center), _radius(radius) {}
 
+Sphere::Sphere(const Utils::ConfigNode& node)
+    : APrimitive(node.getMaterial(), node.parsePoint3D("point"))
+{
+    if (!node.has("radius"))
+        throw std::runtime_error("[Sphere] Missing 'radius' in config node.");
+    _radius = std::stof(node.get("radius"));
+}
+
 bool Primitive::Sphere::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
 {
     math::Vector3D oc = ray.getOrigin() - _position;

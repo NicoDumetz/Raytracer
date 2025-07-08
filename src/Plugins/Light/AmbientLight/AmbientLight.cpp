@@ -11,3 +11,7 @@ Utils::Color Light::AmbientLight::illuminate(const Utils::HitRecord&, const RayT
     return _intensity;
 }
 
+Light::AmbientLight::AmbientLight(const Utils::ConfigNode& node)
+    : _intensity(node.parseColor("color"))
+{
+}

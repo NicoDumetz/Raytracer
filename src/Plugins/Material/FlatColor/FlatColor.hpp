@@ -11,6 +11,8 @@
 #include "Tools/HitRecord/HitRecord.hpp"
 #include "Tools/Color/Color.hpp"
 #include "Interface/IMaterial.hpp"
+#include "Tools/ConfigNode/ConfigNode.hpp"
+
 
 namespace Material {
 
@@ -19,6 +21,7 @@ namespace Material {
         Utils::Color _color;
     public:
         FlatColor( Utils::Color color =  Utils::Color()) : _color(color) {};
+        FlatColor(const Utils::ConfigNode& node);
         ~FlatColor() = default;
         const Utils::Color& shade(const Utils::HitRecord&,
             const Utils::Ray&,

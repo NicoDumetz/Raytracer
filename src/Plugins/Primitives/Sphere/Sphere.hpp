@@ -12,7 +12,7 @@
 #include "Tools/Ray/Ray.hpp"
 #include "Tools/HitRecord/HitRecord.hpp"
 #include "Plugins/Primitives/APrimitives.hpp"
-
+#include "Tools/ConfigNode/ConfigNode.hpp"
 namespace Primitive
 {
     class Sphere : public APrimitive
@@ -21,10 +21,12 @@ namespace Primitive
             Sphere(std::shared_ptr<Material::IMaterial> material,
                 math::Point3D center,
                 double radius);
+            Sphere(const Utils::ConfigNode& node);
+
             ~Sphere() = default;
             bool hit(const Utils::Ray &, Utils::HitRecord &) const;
             void applyTransform(const math::TransformMatrix& transform);
-            
+
         private:
             double _radius;
     };

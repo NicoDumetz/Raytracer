@@ -15,6 +15,12 @@ Plane::Plane(std::shared_ptr<Material::IMaterial> material,
              math::Vector3D normal)
     : APrimitive(std::move(material), point), _normal(normal.normalized()) {}
 
+Plane::Plane(const Utils::ConfigNode& node)
+    : APrimitive(node.getMaterial(), node.parsePoint3D("point"))
+{
+    _normal = node.parseVector3("normal").normalized();
+}
+
 bool Plane::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
 {
     const double epsilon = 1e-6;

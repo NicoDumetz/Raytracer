@@ -12,6 +12,8 @@
 #include "Tools/Math/Vector3D/Vector3D.hpp"
 #include "Tools/Ray/Ray.hpp"
 #include "Interface/ICamera.hpp"
+#include "Tools/ConfigNode/ConfigNode.hpp"
+
 
 namespace Cam
 {
@@ -22,6 +24,8 @@ namespace Cam
             const math::Point3D& lookAt,
             const math::Vector3D& up,
             float fov);
+            Camera(const Utils::ConfigNode& node);
+
             Utils::Ray generateRay(int x, int y) const;
             const Resolution getResolution() const { return _resolution; }
             const math::Point3D& getPosition() const { return _position; }

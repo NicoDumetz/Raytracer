@@ -14,3 +14,8 @@ const Utils::Color& Material::FlatColor::shade(
 ) const {
     return _color;
 }
+
+Material::FlatColor::FlatColor(const Utils::ConfigNode& node)
+    : _color(node.parseColor("color"))
+{
+}
