@@ -16,7 +16,7 @@ std::shared_ptr<BVHNode> BVHNode::buildBVH(std::vector<std::shared_ptr<Primitive
 
     if ((end - start) == 1) {
         auto primitive = primitives[start];
-        return std::make_shared<BVHNode>(primitive->getBoundingBox(), primitive, nullptr, nullptr);
+        return std::make_shared<BVHNode>(primitive->getBoundingBox(), primitive, nullptr, nullptr, BVHLEAF);
     }
 
     auto compare = [](const std::shared_ptr<Primitive::IPrimitive> &a,
@@ -33,7 +33,7 @@ std::shared_ptr<BVHNode> BVHNode::buildBVH(std::vector<std::shared_ptr<Primitive
     if (!right) return left;
 
     Utils::AABB box = AABB::surroundingBox(left->box(), right->box());
-    return std::make_shared<BVHNode>(box, nullptr, left, right);
+    return std::make_shared<BVHNode>(box, nullptr, left, right, BVHNODE);
 }
 
 bool Utils::BVHNode::hit(const Ray &ray, HitRecord &record, double tMax) const
@@ -41,10 +41,10 @@ bool Utils::BVHNode::hit(const Ray &ray, HitRecord &record, double tMax) const
     if (!_box.intersect(ray, tMax))
         return false;
 
-    if (_primitive != nullptr) {
+    if (_type == BVHLEAF) {
         return _primitive->hit(ray, record);
     }
-    if (!_left && !_right)
+    if (_type == BVHNONE)
         return false;
 
     bool hitLeft = false;

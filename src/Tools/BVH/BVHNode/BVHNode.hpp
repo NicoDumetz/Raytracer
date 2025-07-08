@@ -14,6 +14,12 @@
 
 namespace Utils
 {
+enum BVHType {
+    BVHNONE,
+    BVHNODE,
+    BVHLEAF
+};
+
 class BVHNode
 {
 public:
@@ -21,8 +27,9 @@ public:
     BVHNode(const AABB &box,
         std::shared_ptr<Primitive::IPrimitive> primitive = nullptr,
         std::shared_ptr<BVHNode> left = nullptr,
-        std::shared_ptr<BVHNode> right = nullptr)
-        : _box(box), _primitive(primitive), _left(left), _right(right) {};
+        std::shared_ptr<BVHNode> right = nullptr,
+        BVHType type = BVHNONE)
+        : _box(box), _primitive(primitive), _left(left), _right(right), _type(type) {};
 
     static std::shared_ptr<BVHNode> buildBVH(std::vector<std::shared_ptr<Primitive::IPrimitive>> &primitives, int start, int end);
 
@@ -37,6 +44,7 @@ private:
     std::shared_ptr<Primitive::IPrimitive> _primitive;
     std::shared_ptr<BVHNode> _left;
     std::shared_ptr<BVHNode> _right;
+    BVHType _type;
 };
 } // namespace Utils
 

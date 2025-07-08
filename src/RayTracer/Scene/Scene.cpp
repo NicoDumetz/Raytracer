@@ -9,35 +9,6 @@
 
 namespace RayTracer
 {
-    void printIndent(int level) {
-    for (int i = 0; i < level; ++i) std::cout << "  ";
-}
-
-// Assuming your AABB class has min() and max() returning a vector with x,y,z
-void printAABB(const Utils::AABB& box) {
-    auto min = box.min();
-    auto max = box.max();
-    std::cout << "AABB(min: [" << min.x << ", " << min.y << ", " << min.z << "], "
-              << "max: [" << max.x << ", " << max.y << ", " << max.z << "])";
-}
-
-void printBVH(const std::shared_ptr<Utils::BVHNode>& node, int level = 0) {
-    if (!node) {
-        printIndent(level);
-        std::cout << "(null)" << std::endl;
-        return;
-    }
-
-    printIndent(level);
-    printAABB(node->box());
-    if (node->primitive()) {
-        std::cout << " [Leaf Node with primitive]" << std::endl;
-    } else {
-        std::cout << " [Internal Node]" << std::endl;
-        printBVH(node->left(), level + 1);
-        printBVH(node->right(), level + 1);
-    }
-}
 Scene::Scene(std::vector<std::shared_ptr<Primitive::IPrimitive>> primitives,
              std::vector<std::shared_ptr<Light::ILight>> lights,
              std::unique_ptr<Cam::ICamera> camera,
@@ -50,10 +21,7 @@ Scene::Scene(std::vector<std::shared_ptr<Primitive::IPrimitive>> primitives,
       _backgroundColor(backgroundColor),
       _antialiasingType(antialiasingType),
       _antialiasingSamples(antialiasingSamples),
-      _BVHRoot(Utils::BVHNode::buildBVH(_primitives, 0, _primitives.size()))
-{
-    // printBVH(_BVHRoot);
-}
+      _BVHRoot(Utils::BVHNode::buildBVH(_primitives, 0, _primitives.size())) {}
 
 bool Scene::trace(const Utils::Ray& ray, Utils::HitRecord& record) const
 {
@@ -61,20 +29,24 @@ bool Scene::trace(const Utils::Ray& ray, Utils::HitRecord& record) const
     bool hitAnything = false;
     double closest = std::numeric_limits<double>::infinity();
 
-    if (_BVHRoot && _BVHRoot->hit(ray, tempRecord, closest)) {
-        record = tempRecord;
-        hitAnything = true;
+    if (_primitives.size() > 30 && _BVHRoot) {
+        if (_BVHRoot->hit(ray, tempRecord, closest)) {
+            record = tempRecord;
+            hitAnything = true;
+        }
+    } else {
+        double epsilon = 1e-8;
+        for (const auto& primitive : _primitives) {
+            if (primitive->hit(ray, tempRecord)) {
+                double t = tempRecord.getDistance();
+                if (t < epsilon || t >= closest)
+                    continue;
+                closest = t;
+                record = tempRecord;
+                hitAnything = true;
+            }
+        }
     }
-    // for (const auto& primitive : _primitives) {
-    //     if (primitive->hit(ray, tempRecord)) {
-    //         double t = tempRecord.getDistance();
-    //         if (t < epsilon || t >= closest)
-    //             continue;
-    //         closest = t;
-    //         record = tempRecord;
-    //         hitAnything = true;
-    //     }
-    // }
     return hitAnything;
 }
 

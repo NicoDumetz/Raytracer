@@ -12,6 +12,7 @@ namespace Utils
 bool AABB::intersect(const Ray &ray, double tMax) const
 {
     double eps = 1e-8;
+
     for (int i = 0; i < 3; i++) {
         double origin = ray.O[i];
         double direction = ray.D[i];
