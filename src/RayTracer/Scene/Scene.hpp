@@ -10,16 +10,14 @@
 
 #include <memory>
 #include <vector>
-#include <limits>
-#include <algorithm>
 #include "Tools/Math/Matrix/TransformMatrix.hpp"
 #include "Interface/IPrimitive.hpp"
 #include "Interface/ILight.hpp"
 #include "Interface/ICamera.hpp"
 #include "Tools/HitRecord/HitRecord.hpp"
 #include "Tools/Ray/Ray.hpp"
+#include <limits>
 #include "Tools/Color/Color.hpp"
-#include "Tools/BVH/BVHNode/BVHNode.hpp"
 
 namespace RayTracer
 {
@@ -36,7 +34,6 @@ namespace RayTracer
         Utils::Color _backgroundColor = Utils::Color(0, 0, 0, 1);
         AntialiasingType _antialiasingType = AntialiasingType::NONE;
         int _antialiasingSamples = 1;
-        std::shared_ptr<Utils::BVHNode> _BVHRoot;
 
     public:
         Scene(std::vector<std::shared_ptr<Primitive::IPrimitive>> primitives = {},
@@ -50,7 +47,7 @@ namespace RayTracer
 
         bool hasCamera() const;
         const Cam::ICamera& getCamera() const;
-        const std::shared_ptr<Utils::BVHNode> &getBVH() const {return _BVHRoot;};
+
         const std::vector<std::shared_ptr<Primitive::IPrimitive>>& getPrimitives() const;
         const std::vector<std::shared_ptr<Scene>>& getChildren() const;
         const std::vector<std::shared_ptr<Light::ILight>>& getLights() const;

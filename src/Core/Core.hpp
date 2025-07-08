@@ -18,9 +18,9 @@
 #include <regex>
 #include <string>
 #include <thread>
-#include <chrono>
 
 #define PLUGIN_PATH std::string("./plugins/")
+
 namespace RayTracer
 {
     class Core
@@ -29,7 +29,7 @@ namespace RayTracer
         Core(const std::string& filename, const std::string& ppmFilename, char** env);
         ~Core() = default;
 
-        static bool parseArgs(int argc, char **argv, std::string& configFile, std::string& ppmFile);
+        static void parseArgs(int argc, char **argv, std::string& configFile, std::string& ppmFile);
         void checkEnvDisplay(char** env);
         const Scene& getScene() const { return _sceneBuilder->getScene();};
         void run();
@@ -87,5 +87,6 @@ namespace RayTracer
             }}
         };
         void writePPM(const std::vector<std::vector<Utils::Color>> &pixelsArray) const;
+        static std::string helpMessage();
     };
 }

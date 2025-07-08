@@ -12,13 +12,8 @@ int main(int ac, char **av, char **env)
     std::string configFile;
     std::string ppmFile = "output.ppm";
 
-    if (RayTracer::Core::parseArgs(ac, av, configFile, ppmFile)) {
-        std::cout << "USAGE: ./raytracer <SCENE_FILE> [OPTIONS]" << std::endl;
-        std::cout << "\tSCENE_FILE: scene configuration" << std::endl;
-        std::cout << "\t-o <FILE>: output file name (default: output.ppm)" << std::endl;
-        return 84;
-    }
     try {
+        RayTracer::Core::parseArgs(ac, av, configFile, ppmFile);
         RayTracer::Core core(configFile, ppmFile, env);
         core.run();
     } catch (const std::exception &e) {

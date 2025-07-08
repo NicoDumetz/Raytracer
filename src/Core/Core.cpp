@@ -7,7 +7,9 @@
 
 #include "Core.hpp"
 #include <fstream>
+#include <ostream>
 #include <string>
+#include <unistd.h>
 
 RayTracer::Core::Core(const std::string& filename, const std::string& ppmFilename, char** env)
     : _libLoader(PLUGIN_PATH),
@@ -34,7 +36,7 @@ RayTracer::Core::Core(const std::string& filename, const std::string& ppmFilenam
     );
 }
 
-bool RayTracer::Core::parseArgs(int argc, char **argv, std::string& configFile,
+void RayTracer::Core::parseArgs(int argc, char **argv, std::string& configFile,
     std::string& ppmFile)
 {
     std::string arg;
@@ -44,28 +46,20 @@ bool RayTracer::Core::parseArgs(int argc, char **argv, std::string& configFile,
         if (arg == "-o") {
             if (i + 1 < argc)
                 ppmFile = argv[++i];
-            else {
-                std::cerr << "Error: Missing argument for -o option" << std::endl;
-                return true;
-            }
+            else
+                throw std::invalid_argument("Missing argument for -o option" + RayTracer::Core::helpMessage());
             continue;
         }
         if (arg[0] != '-') {
-            if (!configFile.empty()) {
-                std::cerr << "Error: Redefinition of scene config file" << std::endl;
-                return true;
-            }
+            if (!configFile.empty())
+                throw std::invalid_argument("Redefinition of scene config file" + RayTracer::Core::helpMessage());
             configFile = arg;
             continue;
         }
-        std::cerr << "Error: Unknown option: " << arg << std::endl;
-        return true;
+        throw std::invalid_argument("Unknown option: " + arg + RayTracer::Core::helpMessage());
     }
-    if (configFile.empty()) {
-        std::cerr << "Error: Missing scene config file" << std::endl;
-        return true;
-    }
-    return false;
+    if (configFile.empty())
+        throw std::invalid_argument("Missing scene config file" + RayTracer::Core::helpMessage());
 }
 
 void RayTracer::Core::checkEnvDisplay(char **env)
@@ -112,6 +106,14 @@ void RayTracer::Core::writePPM(const std::vector<std::vector<Utils::Color>> &pix
     return (void) pixelsArray;
 }
 
+std::string RayTracer::Core::helpMessage()
+{
+    std::string message = "\nUSAGE: ./raytracer <SCENE_FILE> [OPTIONS]\n";
+    message += "\tSCENE_FILE: scene configuration\n";
+    message += "\t-o <FILE>: output file name (default: output.ppm)\n";
+    return message;
+}
+
 void RayTracer::Core::run()
 {
     const RayTracer::Scene& scene = _sceneBuilder->getScene();
@@ -122,7 +124,6 @@ void RayTracer::Core::run()
     const int threadCount = std::thread::hardware_concurrency();
     std::vector<std::thread> threads;
     int rowPerThread = res.height / threadCount;
-    auto start = std::chrono::high_resolution_clock::now();
 
     auto traceSection = [&](int startY, int endY) {
         for (int y = startY; y < endY; y++) {
@@ -137,9 +138,6 @@ void RayTracer::Core::run()
     }
     for (auto &t : threads)
         t.join();
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = end - start;
-    std::cout << "Elapsed time: " << duration.count() << " seconds\n";
 
     this->writePPM(pixelArray);
     _render->openWindow(res.width, res.height, bgColor);
