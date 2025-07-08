@@ -103,7 +103,7 @@ void RayTracer::Core::writePPM(const std::vector<std::vector<Utils::Color>> &pix
         }
     }
     file.close();
-    return;
+    return (void) pixelsArray;
 }
 
 std::string RayTracer::Core::helpMessage()

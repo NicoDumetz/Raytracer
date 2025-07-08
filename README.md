@@ -209,7 +209,7 @@ Here are some rendered scenes generated using this raytracer. Each one showcases
 
 A standard test scene with spheres, plane, ambient and directional lights.
 
-**Scene file**: `scenes/scene.cfg`  
+**Scene file**: `demo/scene.cfg`  
 **Output**:  
 ![Classic Scene](docs/output_classic.png)
 
@@ -219,7 +219,7 @@ A standard test scene with spheres, plane, ambient and directional lights.
 
 Complex shape and material arrangement creating visual tricks (reflective + refractive mix).
 
-**Scene file**: `scenes/optical.cfg`  
+**Scene file**: `demo/optical.cfg`  
 **Output**:  
 ![Optical Illusion](docs/output_optical_illusion.png)
 
@@ -229,7 +229,7 @@ Complex shape and material arrangement creating visual tricks (reflective + refr
 
 Voxel-like structure made from cubes with checkerboard and gradient textures.
 
-**Scene file**: `scenes/Mincraft.cfg`  
+**Scene file**: `demo/Mincraft.cfg`  
 **Output**:  
 ![Minecraft](docs/output_minecraft.png)
 
@@ -239,7 +239,7 @@ Voxel-like structure made from cubes with checkerboard and gradient textures.
 
 A procedural fractal shape rendered via recursive SDF-based plugin.
 
-**Scene file**: `scenes/mirrorroom.cfg`  
+**Scene file**: `demo/mirrorroom.cfg`  
 **Output**:  
 ![Fractal](docs/output_fractal.png)
 
