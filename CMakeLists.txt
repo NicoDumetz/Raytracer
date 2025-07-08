@@ -179,7 +179,7 @@ add_raytracer_plugin(r_r_sfml             "Renders/SFML"                ON)
 ##                                                                                    ##
 ########################################################################################
 add_custom_target(my_clean
-    COMMAND find ${CMAKE_BINARY_DIR} -type f -name "*.o" -exec rm -f {} \;
+    COMMAND find ${CMAKE_BINARY_DIR} -type f -name "*.o" -exec rm -f {} \\\;
     COMMENT "Cleaning object files (.o)..."
 )
 

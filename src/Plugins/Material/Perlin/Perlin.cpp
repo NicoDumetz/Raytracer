@@ -5,6 +5,7 @@
 ** Perlin
 */
 #include "Perlin.hpp"
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <random>
