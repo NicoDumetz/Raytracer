@@ -6,15 +6,10 @@
 */
 
 #include "Core.hpp"
-#include <fstream>
-#include <ostream>
-#include <string>
-#include <unistd.h>
 
-RayTracer::Core::Core(const std::string& filename, const std::string& ppmFilename, char** env)
+RayTracer::Core::Core(const std::string& filename, char** env)
     : _libLoader(PLUGIN_PATH),
       _parser(std::make_unique<SceneParser>(filename)),
-      _ppmFilename(ppmFilename),
       _primitiveFactory(std::make_shared<Factory<Primitive::IPrimitive>>()),
       _materialFactory(std::make_shared<Factory<Material::IMaterial>>()),
       _lightFactory(std::make_shared<Factory<Light::ILight>>()),
@@ -34,32 +29,6 @@ RayTracer::Core::Core(const std::string& filename, const std::string& ppmFilenam
         _cameraFactory,
         _parser->getNodes()
     );
-}
-
-void RayTracer::Core::parseArgs(int argc, char **argv, std::string& configFile,
-    std::string& ppmFile)
-{
-    std::string arg;
-
-    for (unsigned char i = 1; i < argc; ++i) {
-        arg = argv[i];
-        if (arg == "-o") {
-            if (i + 1 < argc)
-                ppmFile = argv[++i];
-            else
-                throw std::invalid_argument("Missing argument for -o option" + RayTracer::Core::helpMessage());
-            continue;
-        }
-        if (arg[0] != '-') {
-            if (!configFile.empty())
-                throw std::invalid_argument("Redefinition of scene config file" + RayTracer::Core::helpMessage());
-            configFile = arg;
-            continue;
-        }
-        throw std::invalid_argument("Unknown option: " + arg + RayTracer::Core::helpMessage());
-    }
-    if (configFile.empty())
-        throw std::invalid_argument("Missing scene config file" + RayTracer::Core::helpMessage());
 }
 
 void RayTracer::Core::checkEnvDisplay(char **env)
@@ -83,35 +52,6 @@ void RayTracer::Core::checkEnvDisplay(char **env)
     }
     if (!envDisplay)
         throw std::runtime_error("Error: DISPLAY is missing or invalid. Please run in a graphical environment.");
-}
-
-void RayTracer::Core::writePPM(const std::vector<std::vector<Utils::Color>> &pixelsArray) const
-{
-    std::ofstream file(this->_ppmFilename);
-
-    if (!file.is_open())
-        throw std::runtime_error("Unable to open file " + this->_ppmFilename);
-    file << "P3\n";
-    file << pixelsArray[0].size() << " " << pixelsArray.size() << "\n";
-    file << "255\n";
-
-    for (const auto& row : pixelsArray) {
-        for (const auto& pixel : row) {
-            file << static_cast<int>(pixel.r * 255) << " "
-                 << static_cast<int>(pixel.g * 255) << " "
-                 << static_cast<int>(pixel.b * 255) << "\n";
-        }
-    }
-    file.close();
-    return (void) pixelsArray;
-}
-
-std::string RayTracer::Core::helpMessage()
-{
-    std::string message = "\nUSAGE: ./raytracer <SCENE_FILE> [OPTIONS]\n";
-    message += "\tSCENE_FILE: scene configuration\n";
-    message += "\t-o <FILE>: output file name (default: output.ppm)\n";
-    return message;
 }
 
 void RayTracer::Core::run()
@@ -143,7 +83,6 @@ void RayTracer::Core::run()
     std::chrono::duration<double> duration = end - start;
     std::cout << "Elapsed time: " << duration.count() << " seconds\n";
 
-    this->writePPM(pixelArray);
     _render->openWindow(res.width, res.height, bgColor);
     while (_render->isOpen()) {
         while (_render->pollEvent()) {}

@@ -5,16 +5,18 @@
 ** HitRecord.cpp
 */
 #include "Core/Core.hpp"
+#include "RayTracer/LightManager/LightManager.hpp"
 #include <iostream>
 
 int main(int ac, char **av, char **env)
 {
-    std::string configFile;
-    std::string ppmFile = "output.ppm";
-
+    if (ac != 2) {
+        std::cout << "USAGE: ./raytracer <SCENE_FILE>" << std::endl;
+        std::cout << "\tSCENE_FILE: scene configuration" << std::endl;
+        return 0;
+    }
     try {
-        RayTracer::Core::parseArgs(ac, av, configFile, ppmFile);
-        RayTracer::Core core(configFile, ppmFile, env);
+        RayTracer::Core core(av[1], env);
         core.run();
     } catch (const std::exception &e) {
         std::cerr << "[Error] " << e.what() << std::endl;
