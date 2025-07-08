@@ -93,5 +93,15 @@ Vector3D Vector3D::operator/(double value) const {
 void Vector3D::operator/=(double value) {
     x /= value; y /= value; z /= value;
 }
+
+double Vector3D::operator[](int axe) const {
+    if (axe == 0)
+        return x;
+    if (axe == 1)
+        return y;
+    if (axe == 2)
+        return z;
+    throw std::runtime_error("invalid axe from vector");
+}
 }
 

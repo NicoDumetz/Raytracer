@@ -10,6 +10,7 @@
 #include <random>
 #include <numeric>
 #include <vector>
+#include <algorithm>
 
 namespace Material {
 
