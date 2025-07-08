@@ -64,7 +64,6 @@ void RayTracer::Core::run()
     const int threadCount = std::thread::hardware_concurrency();
     std::vector<std::thread> threads;
     int rowPerThread = res.height / threadCount;
-    auto start = std::chrono::high_resolution_clock::now();
 
     auto traceSection = [&](int startY, int endY) {
         for (int y = startY; y < endY; y++) {
@@ -79,9 +78,6 @@ void RayTracer::Core::run()
     }
     for (auto &t : threads)
         t.join();
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = end - start;
-    std::cout << "Elapsed time: " << duration.count() << " seconds\n";
 
     _render->openWindow(res.width, res.height, bgColor);
     while (_render->isOpen()) {

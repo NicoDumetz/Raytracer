@@ -2,13 +2,6 @@
 
 BUILD_DIR="build"
 
-if command -v gcc-13 &>/dev/null && command -v g++-13 &>/dev/null; then
-    export CC=gcc-13
-    export CXX=g++-13
-else
-    export CC=gcc
-    export CXX=g++
-fi
 mkdir -p $BUILD_DIR
 
 echo "Configuring the project..."

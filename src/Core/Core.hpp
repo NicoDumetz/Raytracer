@@ -17,7 +17,6 @@
 #include "RayTracer/LightManager/LightManager.hpp"
 #include <regex>
 #include <thread>
-#include <chrono>
 
 #define PLUGIN_PATH std::string("./plugins/")
 namespace RayTracer
