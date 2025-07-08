@@ -141,7 +141,8 @@ add_raytracer_plugin(r_c_camera       "Camera")
 add_raytracer_plugin(r_m_flatcolor    "Material/FlatColor")
 add_raytracer_plugin(r_m_Checkboard   "Material/Checkboard")
 add_raytracer_plugin(r_m_glass        "Material/Glass")
-add_raytracer_plugin(r_m_perlin        "Material/Perlin")
+add_raytracer_plugin(r_m_perlin       "Material/Perlin")
+add_raytracer_plugin(r_m_mirror       "Material/Mirror")
 # ╰───────────────────────────────────────────╯
 
 # ╭──────────────── 💡 LIGHTS ───────────────╮
