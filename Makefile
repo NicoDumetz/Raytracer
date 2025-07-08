@@ -19,7 +19,8 @@ SRC =	main.cpp \
 		src/Tools/Math/Matrix/TransformMatrix.cpp \
 		src/Tools/Math/Point3D/Point3D.cpp \
 		src/Tools/Math/Vector3D/Vector3D.cpp \
-		src/Tools/Ray/Ray.cpp
+		src/Tools/Ray/Ray.cpp \
+		src/RayTracer/Parser/Parser.cpp
 
 NAME = raytracer
 
@@ -28,7 +29,7 @@ OBJ = $(SRC:.cpp=.o)
 CXX = g++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++20 -I ./src -g
 
-LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lconfig++
 
 all: $(NAME)
 
