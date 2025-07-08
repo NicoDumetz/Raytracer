@@ -133,6 +133,8 @@ add_raytracer_plugin(r_p_cone         "Primitives/Cone")
 add_raytracer_plugin(r_p_cylinder     "Primitives/Cylinder")
 add_raytracer_plugin(r_p_triangles    "Primitives/Triangles")
 add_raytracer_plugin(r_p_Cube         "Primitives/Cube")
+add_raytracer_plugin(r_p_LimitedCone  "Primitives/LimitedCone")
+add_raytracer_plugin(r_p_LimitedCylinder  "Primitives/LimitedCylinder")
 # ╰───────────────────────────────────────────╯
 
 # ╭──────────────── 🎥 CAMERA ────────────────╮

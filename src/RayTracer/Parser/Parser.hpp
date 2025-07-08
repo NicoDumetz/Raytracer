@@ -81,6 +81,14 @@ namespace RayTracer {
                 float size = static_cast<float>((double)setting);
                 node.setField("size", std::to_string(size));
             }},
+            {"minY", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float minY = static_cast<float>((double)setting);
+                node.setField("minY", std::to_string(minY));
+            }},
+            {"maxY", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float maxY = static_cast<float>((double)setting);
+                node.setField("maxY", std::to_string(maxY));
+            }},
         };
 
 
