@@ -20,9 +20,9 @@ namespace RayTracer
         public:
             Sphere(math::Point3D center, double radius);
             ~Sphere() = default;
-            bool hit(const Ray &, HitRecord &) const {return false;};
+            bool hit(const Ray &, HitRecord &) const;
         private:
             math::Point3D _center;
-            double _radius;
+            double R;
     };
 } // namespace RayTracer

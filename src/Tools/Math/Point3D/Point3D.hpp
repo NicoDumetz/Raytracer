@@ -19,6 +19,8 @@ public:
     Point3D() : x(0), y(0), z(0) {}
     Point3D(double x, double y, double z) : x(x), y(y), z(z) {}
     ~Point3D() = default;
+    double dot(const Point3D& other) const;
+    double dot(const math::Vector3D& other) const;
 
     Vector3D operator-(const Point3D &other) const;
     Point3D operator+(const Vector3D &vec) const;

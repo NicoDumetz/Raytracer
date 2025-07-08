@@ -12,15 +12,12 @@
 
 namespace RayTracer
 {
-class Ray
+class Rectangle
 {
 public:
-    math::Point3D O;
-    math::Vector3D D;
-    Ray();
-    Ray(math::Point3D O, math::Vector3D D);
-    ~Ray() = default;
-    math::Point3D getOrigin() const { return O; }
-    math::Vector3D getDirection() const { return D; }
+    math::Point3D origin;
+    math::Vector3D botton_side;
+    math::Vector3D left_side;
+private:
 };
 } // namespace RayTracer
