@@ -53,6 +53,15 @@ namespace RayTracer {
                 float height = static_cast<float>(static_cast<int>(setting));
                 node.setField("height", std::to_string(height));
             }},
+            {"a", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("a", formatVector(setting));
+            }},
+            {"b", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("b", formatVector(setting));
+            }},
+            {"c", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("c", formatVector(setting));
+            }},
             {"translate", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
                 node.setField("translate", formatVector(setting));
             }},
@@ -68,6 +77,34 @@ namespace RayTracer {
                 float angle = static_cast<float>((double)setting);
                 node.setField("rotateZ", std::to_string(angle));
             }},
+        };
+        
+
+        using MaterialHandler = std::function<void(Utils::ConfigNode&, const libconfig::Setting&)>;
+        const std::unordered_map<std::string, MaterialHandler> _materialFieldHandlers = {
+            {"type", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("type", setting.c_str());
+            }},
+            {"name", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("name", setting.c_str());
+            }},
+            {"color", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("color", formatColor(setting));
+            }},
+            {"color1", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("color1", formatColor(setting));
+            }},
+            {"color2", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("color2", formatColor(setting));
+            }},
+            {"tileSize", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float tileSize = static_cast<float>(setting);
+                node.setField("tileSize", std::to_string(tileSize));
+            }},
+            {"ior", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float ior = static_cast<float>(setting);
+                node.setField("ior", std::to_string(ior));
+            }}
         };
 
         const std::unordered_map<std::string, FieldHandler> _lightFieldHandlers = {

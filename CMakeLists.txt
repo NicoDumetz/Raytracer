@@ -131,6 +131,7 @@ add_raytracer_plugin(r_p_sphere       "Primitives/Sphere")
 add_raytracer_plugin(r_p_plane        "Primitives/Plane")
 add_raytracer_plugin(r_p_cone         "Primitives/Cone")
 add_raytracer_plugin(r_p_cylinder     "Primitives/Cylinder")
+add_raytracer_plugin(r_p_triangles     "Primitives/Triangles")
 # ╰───────────────────────────────────────────╯
 
 # ╭──────────────── 🎥 CAMERA ────────────────╮
@@ -139,7 +140,10 @@ add_raytracer_plugin(r_c_camera       "Camera")
 
 # ╭─────────────── 🎨 MATERIALS ──────────────╮
 add_raytracer_plugin(r_m_flatcolor    "Material/FlatColor")
+add_raytracer_plugin(r_m_Checkboard   "Material/Checkboard")
 add_raytracer_plugin(r_m_glass        "Material/Glass")
+add_raytracer_plugin(r_m_perlin       "Material/Perlin")
+add_raytracer_plugin(r_m_mirror       "Material/Mirror")
 # ╰───────────────────────────────────────────╯
 
 # ╭──────────────── 💡 LIGHTS ───────────────╮

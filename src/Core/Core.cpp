@@ -76,10 +76,8 @@ void RayTracer::Core::run()
         int endY = (i == threadCount - 1) ? res.height : startY + rowPerThread;
         threads.emplace_back(traceSection, startY, endY);
     }
-    for (auto &t : threads) {
+    for (auto &t : threads)
         t.join();
-        std::cout << "thread joined." << std::endl;
-    }
 
     _render->openWindow(res.width, res.height, bgColor);
     while (_render->isOpen()) {
