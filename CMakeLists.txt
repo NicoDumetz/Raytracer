@@ -43,7 +43,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -fPIC")
 ########################################################################################
 ##                                                                                    ##
 ##     📁 DIRECTORY STRUCTURE                                                         ##
-##     Defines main folders for source, build and plugins                            ##
+##     Defines main folders for source, build and plugins                             ##
 ##                                                                                    ##
 ########################################################################################
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -58,7 +58,7 @@ set(TOOLS_DIR ${SRC_DIR}/Tools)
 ########################################################################################
 ##                                                                                    ##
 ##     📌 INCLUDE DIRECTORIES                                                         ##
-##     Header file include paths for compilation                                     ##
+##     Header file include paths for compilation                                      ##
 ##                                                                                    ##
 ########################################################################################
 include_directories(${SRC_DIR})
@@ -69,7 +69,7 @@ include_directories(${TOOLS_DIR})
 ########################################################################################
 ##                                                                                    ##
 ##     📦 CORE SOURCES                                                                ##
-##     Gathers all non-plugin .cpp files                                             ##
+##     Gathers all non-plugin .cpp files                                              ##
 ##                                                                                    ##
 ########################################################################################
 file(GLOB_RECURSE CORE_SRC "${SRC_DIR}/*.cpp")
@@ -79,7 +79,7 @@ list(FILTER CORE_SRC EXCLUDE REGEX ".*/Plugins/.*")
 ########################################################################################
 ##                                                                                    ##
 ##     📚 COMMON STATIC LIBRARY                                                       ##
-##     Shared tools (math, config, scene, etc.) built as static lib                  ##
+##     Shared tools (math, config, scene, etc.) built as static lib                   ##
 ##                                                                                    ##
 ########################################################################################
 file(GLOB_RECURSE COMMON_SRC
@@ -92,7 +92,7 @@ add_library(raytracer_common STATIC ${COMMON_SRC})
 ########################################################################################
 ##                                                                                    ##
 ##     🚀 MAIN EXECUTABLE                                                             ##
-##     Builds the final 'raytracer' binary                                           ##
+##     Builds the final 'raytracer' binary                                            ##
 ##                                                                                    ##
 ########################################################################################
 add_executable(raytracer ${CORE_SRC})
@@ -108,7 +108,7 @@ target_link_libraries(raytracer
 ########################################################################################
 ##                                                                                    ##
 ##     🧩 PLUGINS : PRIMITIVES                                                        ##
-##     Dynamic objects: Sphere, Cone, Plane, Cylinder                                ##
+##     Dynamic objects: Sphere, Cone, Plane, Cylinder                                 ##
 ##                                                                                    ##
 ########################################################################################
 file(GLOB_RECURSE SPHERE_SRC "${PLUGIN_DIR}/Primitives/Sphere/*.cpp")
@@ -135,7 +135,7 @@ target_link_libraries(r_p_cylinder raytracer_common)
 ########################################################################################
 ##                                                                                    ##
 ##     🎥 PLUGINS : CAMERA                                                            ##
-##     Dynamic camera component                                                      ##
+##     Dynamic camera component                                                       ##
 ##                                                                                    ##
 ########################################################################################
 file(GLOB_RECURSE CAMERA_SRC "${PLUGIN_DIR}/Camera/*.cpp")
@@ -147,7 +147,7 @@ target_link_libraries(r_c_camera raytracer_common)
 ########################################################################################
 ##                                                                                    ##
 ##     🎨 PLUGINS : MATERIALS                                                         ##
-##     Materials like Glass and FlatColor                                            ##
+##     Materials like Glass and FlatColor                                             ##
 ##                                                                                    ##
 ########################################################################################
 file(GLOB_RECURSE FLATCOLOR_SRC "${PLUGIN_DIR}/Material/FlatColor/*.cpp")
@@ -164,7 +164,7 @@ target_link_libraries(r_m_glass raytracer_common)
 ########################################################################################
 ##                                                                                    ##
 ##     💡 PLUGINS : LIGHTS                                                            ##
-##     Lighting models: Ambient and Directional                                     ##
+##     Lighting models: Ambient and Directional                                       ##
 ##                                                                                    ##
 ########################################################################################
 file(GLOB_RECURSE AMBIENT_SRC "${PLUGIN_DIR}/Light/AmbientLight/*.cpp")
@@ -181,7 +181,7 @@ target_link_libraries(r_l_directional raytracer_common)
 ########################################################################################
 ##                                                                                    ##
 ##     🖼️  PLUGINS : RENDERER                                                         ##
-##     Backend renderer using SFML                                                  ##
+##     Backend renderer using SFML                                                    ##
 ##                                                                                    ##
 ########################################################################################
 file(GLOB_RECURSE SFML_RENDERER_SRC "${PLUGIN_DIR}/Renders/SFML/*.cpp")
@@ -192,8 +192,8 @@ target_link_libraries(r_r_sfml raytracer_common)
 
 ########################################################################################
 ##                                                                                    ##
-##     🛠️  CUSTOM BUILD COMMANDS                                                     ##
-##     Manual tools: clean, fclean, rebuild                                          ##
+##     🛠️  CUSTOM BUILD COMMANDS                                                      ##
+##     Manual tools: clean, fclean, rebuild                                           ##
 ##                                                                                    ##
 ########################################################################################
 add_custom_target(my_clean
