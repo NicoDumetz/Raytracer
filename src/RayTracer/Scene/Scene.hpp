@@ -5,40 +5,57 @@
 ** main
 */
 
+// Scene.hpp
 #pragma once
 
-#pragma once
-
-#include <vector>
 #include <memory>
-#include <stdexcept>
+#include <vector>
+#include "Tools/Math/Matrix/TransformMatrix.hpp"
 #include "Interface/IPrimitive.hpp"
 #include "Interface/ILight.hpp"
-#include "RayTracer/Camera/Camera.hpp"
-#include "RayTracer/Ray/Ray.hpp"
+#include "Interface/ICamera.hpp"
 #include "Tools/HitRecord/HitRecord.hpp"
+#include "Tools/Ray/Ray.hpp"
+#include <limits>
+#include "Tools/Color/Color.hpp"
 
-namespace RayTracer {
+namespace RayTracer
+{
+    enum class AntialiasingType {
+        NONE,
+        SUPERSAMPLING,
+    };
 
-    class Scene : public IPrimitive {
+    class Scene {
     private:
-        std::unique_ptr<Camera> _camera;
-        std::shared_ptr<Scene> _parent;
-        std::vector<std::unique_ptr<IPrimitive>> _primitives;
-        std::vector<std::unique_ptr<ILight>> _lights;
+        std::vector<std::shared_ptr<Primitive::IPrimitive>> _primitives;
+        std::vector<std::shared_ptr<Light::ILight>> _lights;
+        std::unique_ptr<Cam::ICamera> _camera;
+        Utils::Color _backgroundColor = Utils::Color(0, 0, 0, 1);
+        AntialiasingType _antialiasingType = AntialiasingType::NONE;
+        int _antialiasingSamples = 1;
 
     public:
-        Scene(std::vector<std::unique_ptr<IPrimitive>>&& primitives,
-              std::vector<std::unique_ptr<ILight>>&& lights,
-              std::unique_ptr<Camera> camera = nullptr,
-              std::shared_ptr<Scene> parent = nullptr)
-            : _camera(std::move(camera)),
-              _parent(std::move(parent)),
-              _primitives(std::move(primitives)),
-              _lights(std::move(lights)) {}
+        Scene(std::vector<std::shared_ptr<Primitive::IPrimitive>> primitives = {},
+            std::vector<std::shared_ptr<Light::ILight>> lights = {},
+            std::unique_ptr<Cam::ICamera> camera = nullptr,
+            const Utils::Color& backgroundColor = Utils::Color(0, 0, 0, 1),
+            AntialiasingType antialiasingType = AntialiasingType::NONE,
+            int antialiasingSamples = 1);
 
-        bool hit(const Ray& ray, HitRecord& record) const;
-        bool hasCamera() const { return _camera != nullptr; }
-        const Camera& getCamera() const;
+        bool trace(Utils::Ray& ray, Utils::HitRecord& record) const;
+
+        bool hasCamera() const;
+        const Cam::ICamera& getCamera() const;
+
+        const std::vector<std::shared_ptr<Primitive::IPrimitive>>& getPrimitives() const;
+        const std::vector<std::shared_ptr<Scene>>& getChildren() const;
+        const std::vector<std::shared_ptr<Light::ILight>>& getLights() const;
+        AntialiasingType getAntialiasingType() const {return _antialiasingType;}
+        int getAntialiasingSamples() const {return _antialiasingSamples;}
+        void setAntialiasingType(AntialiasingType type) {_antialiasingType = type;}
+        void setAntialiasingSamples(int samples) {_antialiasingSamples = samples;}
+        void setBackgroundColor(const Utils::Color& color) {_backgroundColor = color;}
+        const Utils::Color& getBackgroundColor() const {return _backgroundColor;}
     };
 }
