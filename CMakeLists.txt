@@ -153,6 +153,7 @@ add_raytracer_plugin(r_m_mirror       "Material/Mirror")
 # ╭──────────────── 💡 LIGHTS ───────────────╮
 add_raytracer_plugin(r_l_ambient      "Light/AmbientLight")
 add_raytracer_plugin(r_l_directional  "Light/DirectionnalLight")
+add_raytracer_plugin(r_l_pointLight   "Light/PointLight")
 # ╰──────────────────────────────────────────╯
 
 # ╭────────────── 🖼️ RENDERER ───────────────╮

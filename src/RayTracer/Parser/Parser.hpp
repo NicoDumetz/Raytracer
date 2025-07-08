@@ -134,6 +134,9 @@ namespace RayTracer {
             }},
             {"direction", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
                 node.setField("direction", formatVector(setting));
+            }},
+            {"position", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("position", formatVector(setting));
             }}
         };
     };

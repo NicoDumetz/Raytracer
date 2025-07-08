@@ -10,7 +10,6 @@
 #include <sstream>
 #include <iomanip>
 
-
 RayTracer::SceneParser::SceneParser(const std::string& filename)
 {
     parseFile(filename);
@@ -106,13 +105,18 @@ void RayTracer::SceneParser::parseLights(const libconfig::Setting& root)
     if (!root.exists("lights"))
         return;
     const auto& lights = root["lights"];
-
     if (lights.exists("ambient"))
         _nodes.push_back(parseLight(lights["ambient"]));
+
     if (lights.exists("directional")) {
         const auto& dirLights = lights["directional"];
         for (int i = 0; i < dirLights.getLength(); i++)
             _nodes.push_back(parseLight(dirLights[i]));
+    }
+    if (lights.exists("point")) {
+        const auto& pointLights = lights["point"];
+        for (int i = 0; i < pointLights.getLength(); i++)
+            _nodes.push_back(parseLight(pointLights[i]));
     }
 }
 
@@ -132,14 +136,19 @@ Utils::ConfigNode RayTracer::SceneParser::parsePrimitive(const libconfig::Settin
 
 Utils::ConfigNode RayTracer::SceneParser::parseLight(const libconfig::Setting& light)
 {
-    std::string type = light.exists("direction") ? "directional" : "ambient";
+    std::string type;
+    if (light.exists("direction"))
+        type = "directional";
+    else if (light.exists("position"))
+        type = "point";
+    else
+        type = "ambient";
     Utils::ConfigNode node(Utils::ConfigNode::ConfigType::LIGHT, type);
-
+    node.setField("type", type);
     for (const auto& [fieldName, handler] : _lightFieldHandlers) {
         if (light.exists(fieldName.c_str()))
             handler(node, light[fieldName.c_str()]);
     }
-
     return node;
 }
 
