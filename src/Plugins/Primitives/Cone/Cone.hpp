@@ -35,9 +35,27 @@ namespace Primitive {
                 const Utils::Ray &ray,
                 Utils::HitRecord &record,
                 const math::Point3D &localHit) const;
+
+        const Utils::AABB &getBoundingBox() const {return _box;};
     private:
         math::Point3D _apex;
         double _height;
         double _radius;
+        Utils::AABB _box;
+
+        Utils::AABB calculateBox() const
+        {
+            double minX = -_radius;
+            double maxX = _radius;
+            double minY = 0;
+            double maxY = _height;
+            double minZ = -_radius;
+            double maxZ = _radius;
+
+            math::Vector3D min(minX, minY, minZ);
+            math::Vector3D max(maxX, maxY, maxZ);
+
+            return Utils::AABB(min, max);
+        }
     };
 } // namespace Primitive

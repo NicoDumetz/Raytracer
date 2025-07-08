@@ -13,13 +13,13 @@ namespace Primitive {
 
 Triangle::Triangle(std::shared_ptr<Material::IMaterial> material,
                    math::Point3D a, math::Point3D b, math::Point3D c)
-    : APrimitive(std::move(material), a), _a(a), _b(b), _c(c)
+    : APrimitive(std::move(material), a), _a(a), _b(b), _c(c), _box(calculateBox())
 {
     _normal = ((_b - _a).cross(_c - _a)).normalized();
 }
 
 Triangle::Triangle(const Utils::ConfigNode& node)
-    : APrimitive(node.getMaterial(), node.parsePoint3D("a"))
+    : APrimitive(node.getMaterial(), node.parsePoint3D("a")), _box(calculateBox())
 {
     if (!node.has("b") || !node.has("c"))
         throw std::runtime_error("[Triangle] Missing 'b' or 'c' in config");

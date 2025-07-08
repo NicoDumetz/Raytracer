@@ -28,7 +28,18 @@ namespace Primitive
         ~Plane() = default;
 
         bool hit(const Utils::Ray &ray, Utils::HitRecord &record) const override;
+        const Utils::AABB &getBoundingBox() const {return _box;};
     private:
         math::Vector3D _normal;
+        Utils::AABB _box;
+
+        Utils::AABB calculateBox() const
+        {
+            double maxRange = 1e6;
+            math::Vector3D min(-maxRange, -maxRange, -maxRange);
+            math::Vector3D max(maxRange, maxRange, maxRange);
+
+            return Utils::AABB(min, max);
+        }
     };
 }
