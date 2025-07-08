@@ -16,6 +16,7 @@ class Core
 public:
     Core();
     ~Core() = default;
+
 private:
     LibLoader _libLoader;
 };
