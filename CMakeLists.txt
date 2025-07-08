@@ -139,6 +139,7 @@ add_raytracer_plugin(r_c_camera       "Camera")
 
 # ╭─────────────── 🎨 MATERIALS ──────────────╮
 add_raytracer_plugin(r_m_flatcolor    "Material/FlatColor")
+add_raytracer_plugin(r_m_Checkboard   "Material/Checkboard")
 add_raytracer_plugin(r_m_glass        "Material/Glass")
 # ╰───────────────────────────────────────────╯
 
