@@ -77,8 +77,28 @@ namespace RayTracer {
                 float angle = static_cast<float>((double)setting);
                 node.setField("rotateZ", std::to_string(angle));
             }},
+            {"size", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float size = static_cast<float>((double)setting);
+                node.setField("size", std::to_string(size));
+            }},
+            {"minY", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float minY = static_cast<float>((double)setting);
+                node.setField("minY", std::to_string(minY));
+            }},
+            {"maxY", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float maxY = static_cast<float>((double)setting);
+                node.setField("maxY", std::to_string(maxY));
+            }},
+            {"major_radius", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float R = static_cast<float>((double)setting);
+                node.setField("major_radius", std::to_string(R));
+            }},
+            {"minor_radius", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float r = static_cast<float>((double)setting);
+                node.setField("minor_radius", std::to_string(r));
+            }},
         };
-        
+
 
         using MaterialHandler = std::function<void(Utils::ConfigNode&, const libconfig::Setting&)>;
         const std::unordered_map<std::string, MaterialHandler> _materialFieldHandlers = {
@@ -105,6 +125,7 @@ namespace RayTracer {
                 float ior = static_cast<float>(setting);
                 node.setField("ior", std::to_string(ior));
             }}
+
         };
 
         const std::unordered_map<std::string, FieldHandler> _lightFieldHandlers = {

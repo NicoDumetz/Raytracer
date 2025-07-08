@@ -18,7 +18,14 @@
 #include "Interface/IMaterial.hpp"
 #include "Tools/Math/Point3D/Point3D.hpp"
 #include "Tools/Math/Matrix/TransformMatrix.hpp"
-
+#include "Tools/Math/Point3D/Point3D.hpp"
+#include "Tools/Math/Vector3D/Vector3D.hpp"
+#include "Tools/Ray/Ray.hpp"
+#include "Tools/HitRecord/HitRecord.hpp"
+#include "Plugins/Primitives/APrimitives.hpp"
+#include "Tools/ConfigNode/ConfigNode.hpp"
+#include "Shared/LibraryType.hpp"
+#include "Factory/Factory.hpp"
 namespace Primitive
 {
     class APrimitive : public IPrimitive {
@@ -28,21 +35,25 @@ namespace Primitive
         std::shared_ptr<Material::IMaterial> _material;
         math::Point3D _position;
 
-        using TransformFn = std::function<void(math::TransformMatrix&, const Utils::ConfigNode&)>;
+        using TransformFn = std::function<void(math::TransformMatrix&, const Utils::ConfigNode&, const math::Point3D&)>;
         const std::unordered_map<std::string, TransformFn> _transformHandler = {
-            {"translate", [](math::TransformMatrix& T, const Utils::ConfigNode& node) {
+            {"translate", [](math::TransformMatrix& T, const Utils::ConfigNode& node, const math::Point3D&) {
                 T.applyTranslation(node.parseVector3("translate"));
             }},
-            {"rotateX", [](math::TransformMatrix& T, const Utils::ConfigNode& node) {
-                T.applyRotationX(node.parseFloat("rotateX") * M_PI / 180.0f);
+            {"rotateX", [](math::TransformMatrix& T, const Utils::ConfigNode& node, const math::Point3D& pos) {
+                math::Point3D center = node.has("center") ? node.parsePoint3D("center") : pos;
+                T.rotateAroundPointX(center, node.parseFloat("rotateX") * M_PI / 180.0f);
             }},
-            {"rotateY", [](math::TransformMatrix& T, const Utils::ConfigNode& node) {
-                T.applyRotationY(node.parseFloat("rotateY") * M_PI / 180.0f);
+            {"rotateY", [](math::TransformMatrix& T, const Utils::ConfigNode& node, const math::Point3D& pos) {
+                math::Point3D center = node.has("center") ? node.parsePoint3D("center") : pos;
+                T.rotateAroundPointY(center, node.parseFloat("rotateY") * M_PI / 180.0f);
             }},
-            {"rotateZ", [](math::TransformMatrix& T, const Utils::ConfigNode& node) {
-                T.applyRotationZ(node.parseFloat("rotateZ") * M_PI / 180.0f);
-            }}
+            {"rotateZ", [](math::TransformMatrix& T, const Utils::ConfigNode& node, const math::Point3D& pos) {
+                math::Point3D center = node.has("center") ? node.parsePoint3D("center") : pos;
+                T.rotateAroundPointZ(center, node.parseFloat("rotateZ") * M_PI / 180.0f);
+            }},
         };
+
     public:
         APrimitive(std::shared_ptr<Material::IMaterial> material, math::Point3D position)
             : _material(std::move(material)), _position(position) {};
@@ -58,13 +69,13 @@ namespace Primitive
             _transform = M * _transform;
             _inverseTransform = _transform.inverse();
         }
-        void applyNodeTransform(const Utils::ConfigNode& node)
+        void applyNodeTransform(const Utils::ConfigNode& node, const math::Point3D position)
         {
             math::TransformMatrix T;
 
             for (const auto& [key, fn] : _transformHandler) {
                 if (node.has(key))
-                    fn(T, node);
+                    fn(T, node, position);
             }
             applyTransform(T);
         }
