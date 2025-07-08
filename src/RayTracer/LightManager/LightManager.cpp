@@ -49,53 +49,58 @@ Utils::Color LightManager::computeDirectLighting(
 
 Utils::Color LightManager::traceRay(
     const Utils::Ray& ray,
-    const Scene& scene,
-    int depth
+    const Scene&      scene,
+    int               depth
 ) const {
-    constexpr int   MAX_DEPTH = 5;
+    constexpr int   MAX_DEPTH = 4;
     constexpr float EPS       = 1e-4f;
 
     if (depth > MAX_DEPTH)
         return scene.getBackgroundColor();
 
-    Utils::HitRecord record;
-    if (!scene.trace(ray, record))
+    Utils::HitRecord rec;
+    if (!scene.trace(ray, rec))
         return scene.getBackgroundColor();
 
     Material::IMaterial::MaterialProperties props{};
-    Utils::Color albedo = record
-        .getMaterial()
-        .shade(record, ray, props);
+    Utils::Color albedo = rec.getMaterial()
+        .shade(rec, ray, props);
 
-    Utils::Color direct = computeDirectLighting(record, scene);
-    Utils::Color localColor = {
+    math::Vector3D N = rec.getNormal().normalized();
+    math::Vector3D D = ray.getDirection().normalized();
+    if (D.dot(N) > 0.0f) 
+        N = -N;
+
+    if (props.reflectivity >= 1.0f - 1e-6f && props.transparency <= 1e-6f) {
+        math::Vector3D R = D.reflect(N);
+        Utils::Ray reflRay(rec.getPosition() + N*EPS, R);
+        return traceRay(reflRay, scene, depth+1) * albedo;
+    }
+
+    Utils::Color direct = computeDirectLighting(rec, scene);
+    Utils::Color local  = {
         albedo.r * direct.r,
         albedo.g * direct.g,
         albedo.b * direct.b,
         albedo.a
     };
 
-    math::Vector3D N = record.getNormal().normalized();
-    math::Vector3D V = -ray.getDirection().normalized();
-
-    Utils::Color reflColor(0,0,0,1), refrColor(0,0,0,1);
+    Utils::Color reflColor(0,0,0,1);
     if (props.reflectivity > 0.0f) {
-        math::Vector3D R = V - (N * 2.0f * (V.dot(N)));
-        Utils::Ray reflRay(record.getPosition() + N*EPS, R);
-        reflColor = traceRay(reflRay, scene, depth + 1)
+        math::Vector3D R = D.reflect(N);
+        Utils::Ray reflRay(rec.getPosition() + N*EPS, R);
+        reflColor = traceRay(reflRay, scene, depth+1)
                   * props.reflectivity;
     }
+
+    Utils::Color refrColor(0,0,0,1);
     if (props.transparency > 0.0f) {
-        float eta = (V.dot(N) > 0.0f)
-                  ? (1.0f/props.refractiveIndex)
-                  : props.refractiveIndex;
-        if (auto refrDir = refract(V, N, eta)) {
-            Utils::Ray refrRay(record.getPosition() - N*EPS, *refrDir);
-            refrColor = traceRay(refrRay, scene, depth + 1)
+        if (auto T = refract(D, N, props.refractiveIndex)) {
+            Utils::Ray refrRay(rec.getPosition() - N*EPS, *T);
+            refrColor = traceRay(refrRay, scene, depth+1)
                       * props.transparency;
         }
     }
-    return localColor + reflColor + refrColor;
+    return local + reflColor + refrColor;
 }
-
 } // namespace RayTracer
