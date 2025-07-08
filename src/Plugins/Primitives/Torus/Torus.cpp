@@ -18,11 +18,11 @@ Torus::Torus(std::shared_ptr<Material::IMaterial> material,
              double majorRadius,
              double minorRadius)
     : APrimitive(std::move(material), center),
-      _majorRadius(majorRadius), _minorRadius(minorRadius), _box(calculateBox())
+      _majorRadius(majorRadius), _minorRadius(minorRadius)
 {}
 
 Torus::Torus(const Utils::ConfigNode& node)
-    : APrimitive(node.getMaterial(), node.parsePoint3D("center")), _box(calculateBox())
+    : APrimitive(node.getMaterial(), node.parsePoint3D("center"))
 {
     _majorRadius = std::stof(node.get("major_radius"));
     _minorRadius = std::stof(node.get("minor_radius"));

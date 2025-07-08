@@ -12,11 +12,11 @@ namespace Primitive {
 Cylinder::Cylinder(std::shared_ptr<Material::IMaterial> material,
                     math::Point3D base,
                     double radius)
-    : APrimitive(std::move(material), base), _base(base), _radius(radius), _box(calculateBox())
+    : APrimitive(std::move(material), base), _base(base), _radius(radius)
 {}
 
 Cylinder::Cylinder(const Utils::ConfigNode& node)
-    : APrimitive(node.getMaterial(), node.parsePoint3D("center")), _box(calculateBox())
+    : APrimitive(node.getMaterial(), node.parsePoint3D("center"))
 {
     _base = _position;
     if (!node.has("radius"))

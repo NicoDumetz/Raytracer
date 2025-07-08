@@ -65,8 +65,6 @@ void RayTracer::Core::run()
     std::vector<std::thread> threads;
     int rowPerThread = res.height / threadCount;
 
-    if (scene.getBVH() == nullptr)
-        throw std::runtime_error("emtpy bvh.");
     auto traceSection = [&](int startY, int endY) {
         for (int y = startY; y < endY; y++) {
             for (int x = 0; x < res.width; x++)
@@ -76,7 +74,6 @@ void RayTracer::Core::run()
     for (int i = 0; i < threadCount; i++) {
         int startY = i * rowPerThread;
         int endY = (i == threadCount - 1) ? res.height : startY + rowPerThread;
-        traceSection(startY, endY);
         threads.emplace_back(traceSection, startY, endY);
     }
     for (auto &t : threads)

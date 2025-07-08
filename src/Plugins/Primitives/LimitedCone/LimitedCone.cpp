@@ -19,11 +19,11 @@ LimitedCone::LimitedCone(std::shared_ptr<Material::IMaterial> material,
                          double minY,
                          double maxY)
     : APrimitive(std::move(material), center),
-      _radius(radius), _height(height), _minY(minY), _maxY(maxY), _box(calculateBox())
+      _radius(radius), _height(height), _minY(minY), _maxY(maxY)
 {}
 
 LimitedCone::LimitedCone(const Utils::ConfigNode& node)
-    : APrimitive(node.getMaterial(), node.parsePoint3D("center")), _box(calculateBox())
+    : APrimitive(node.getMaterial(), node.parsePoint3D("center"))
 {
     _radius = std::stof(node.get("radius"));
     _height = std::stof(node.get("height"));

@@ -13,11 +13,11 @@ Cone::Cone(std::shared_ptr<Material::IMaterial> material,
            math::Point3D apex,
            double height,
            double radius)
-    : APrimitive(std::move(material), apex), _apex(apex), _height(height), _radius(radius), _box(calculateBox())
+    : APrimitive(std::move(material), apex), _apex(apex), _height(height), _radius(radius)
 {}
 
 Cone::Cone(const Utils::ConfigNode& node)
-    : APrimitive(node.getMaterial(), node.parsePoint3D("center")), _box(calculateBox())
+    : APrimitive(node.getMaterial(), node.parsePoint3D("center"))
 {
     _apex = _position;
 

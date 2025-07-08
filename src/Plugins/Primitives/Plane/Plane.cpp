@@ -12,10 +12,10 @@ namespace Primitive {
 Plane::Plane(std::shared_ptr<Material::IMaterial> material,
              math::Point3D point,
              math::Vector3D normal)
-    : APrimitive(std::move(material), point), _normal(normal.normalized()), _box(calculateBox()) {}
+    : APrimitive(std::move(material), point), _normal(normal.normalized()) {}
 
 Plane::Plane(const Utils::ConfigNode& node)
-    : APrimitive(node.getMaterial(), node.parsePoint3D("point")), _box(calculateBox())
+    : APrimitive(node.getMaterial(), node.parsePoint3D("point"))
 {
     _normal = node.parseVector3("normal").normalized();
     this->applyNodeTransform(node, _position);

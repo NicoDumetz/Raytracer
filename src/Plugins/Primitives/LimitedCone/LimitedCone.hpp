@@ -24,24 +24,11 @@ namespace Primitive {
         LimitedCone(const Utils::ConfigNode& node);
             bool hit(const Utils::Ray& ray, Utils::HitRecord& record) const override;
 
-        const Utils::AABB &getBoundingBox() const {return _box;};
     private:
         double _radius;
         double _height;
         double _minY;
         double _maxY;
-        Utils::AABB _box;
-
-        Utils::AABB calculateBox() const
-        {
-            double apexY = _position.y + _minY;
-            double baseY = _position.y + _maxY;
-            double baseRadius = _radius;
-            math::Vector3D min = math::Vector3D(_position.x - baseRadius, apexY, _position.z - baseRadius);
-            math::Vector3D max = math::Vector3D(_position.x + baseRadius, baseY, _position.z + baseRadius);
-
-            return Utils::AABB(min, max);
-        }
     };
 
     }

@@ -13,11 +13,11 @@ namespace Primitive {
 Cube::Cube(std::shared_ptr<Material::IMaterial> material,
            math::Point3D center,
            double size)
-    : APrimitive(std::move(material), center), _halfSize(size / 2.0), _box(calculateBox())
+    : APrimitive(std::move(material), center), _halfSize(size / 2.0)
 {}
 
 Cube::Cube(const Utils::ConfigNode& node)
-    : APrimitive(node.getMaterial(), node.parsePoint3D("center")), _box(calculateBox())
+    : APrimitive(node.getMaterial(), node.parsePoint3D("center"))
 {
     if (!node.has("size"))
         throw std::runtime_error("[Cube] Missing 'size' field");
