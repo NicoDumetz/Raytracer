@@ -13,25 +13,20 @@ Utils::Color RayTracer::LightManager::computeLighting(
     const RayTracer::Scene& scene,
     const Utils::Ray& ray
 ) const {
-    Utils::Color lightSum(0.0f, 0.0f, 0.0f, 1.0f);
+    const Utils::Color baseColor = hit.getMaterial().shade(hit, ray, scene);
 
-    for (const auto& light : scene.getLights()) {
-        Utils::Color contribution = light->illuminate(hit, scene);
-        lightSum.r += contribution.r;
-        lightSum.g += contribution.g;
-        lightSum.b += contribution.b;
-    }
-
-    lightSum.r = std::clamp(lightSum.r, 0.0f, 1.0f);
-    lightSum.g = std::clamp(lightSum.g, 0.0f, 1.0f);
-    lightSum.b = std::clamp(lightSum.b, 0.0f, 1.0f);
-
-    const Utils::Color& baseColor = hit.getMaterial().shade(hit, ray, scene);
+    Utils::Color diffuseSum(0.0f, 0.0f, 0.0f, 1.0f);
+    for (const auto& light : scene.getLights())
+        diffuseSum += light->illuminate(hit, scene);
+    diffuseSum.r = std::clamp(diffuseSum.r, 0.0f, 1.0f);
+    diffuseSum.g = std::clamp(diffuseSum.g, 0.0f, 1.0f);
+    diffuseSum.b = std::clamp(diffuseSum.b, 0.0f, 1.0f);
 
     return Utils::Color(
-        baseColor.r * lightSum.r,
-        baseColor.g * lightSum.g,
-        baseColor.b * lightSum.b,
+        baseColor.r * diffuseSum.r,
+        baseColor.g * diffuseSum.g,
+        baseColor.b * diffuseSum.b,
         baseColor.a
     );
 }
+

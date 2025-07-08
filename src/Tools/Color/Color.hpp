@@ -23,7 +23,16 @@ namespace Utils
         float g;
         float b;
         float a;
+
+        Color& operator+=(const Color& o) {
+            r += o.r;
+            g += o.g;
+            b += o.b;
+            a += o.a;
+            return *this;
+        }
     };
+
     inline std::ostream& operator<<(std::ostream& os, const Color& color) {
         os << "Color(r=" << color.r
            << ", g=" << color.g
