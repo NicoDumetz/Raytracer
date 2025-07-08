@@ -12,7 +12,7 @@ namespace Utils
 {
     class Color {
     public:
-        Color() : r(0), g(0), b(0), a(255) {}
+        Color() : r(0), g(0), b(0), a(1) {}
         Color(float red,
             float green,
             float blue,

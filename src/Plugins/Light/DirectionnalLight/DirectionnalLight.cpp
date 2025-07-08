@@ -19,13 +19,13 @@ Utils::Color Light::DirectionalLight::illuminate(const Utils::HitRecord& hit, co
     Utils::HitRecord shadowHit;
 
     if (scene.trace(shadowRay, shadowHit))
-        return Utils::Color(0, 0, 0, 255);
+        return Utils::Color(0, 0, 0, 1.0f);
     float dot = std::max(static_cast<double>(0.0f), normal.dot(lightDir));
         
         return Utils::Color(
-            (_intensity.r / 255.0) * dot,
-            (_intensity.g / 255.0) * dot,
-            (_intensity.b / 255.0) * dot,
+            _intensity.r * dot,
+            _intensity.g * dot,
+            _intensity.b * dot,
             1.0f
         );
         

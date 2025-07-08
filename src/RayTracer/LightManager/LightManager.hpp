@@ -11,6 +11,8 @@
 #include "Interface/IMaterial.hpp"
 #include "RayTracer/Scene/Scene.hpp"
 #include "Tools/HitRecord/HitRecord.hpp"
+#include <algorithm>
+
 namespace RayTracer
 {
     class LightManager {

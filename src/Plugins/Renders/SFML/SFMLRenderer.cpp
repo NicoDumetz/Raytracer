@@ -40,10 +40,10 @@ void Renderer::SFMLRenderer::clean()
 {
     _window.clear(
         sf::Color(
-            static_cast<sf::Uint8>(_background.r),
-            static_cast<sf::Uint8>(_background.g),
-            static_cast<sf::Uint8>(_background.b),
-            static_cast<sf::Uint8>(_background.a)
+            static_cast<sf::Uint8>(_background.r * 255),
+            static_cast<sf::Uint8>(_background.g * 255),
+            static_cast<sf::Uint8>(_background.b * 255),
+            static_cast<sf::Uint8>(_background.a * 255)
         )
     );    
 }
@@ -61,10 +61,10 @@ void Renderer::SFMLRenderer::drawPixelArray(const std::vector<std::vector<Utils:
         for (unsigned int x = 0; x < imgWidth; ++x) {
             const auto& c = hitRecords[y][x].getColor();
             _image.setPixel(x, y, sf::Color(
-                static_cast<sf::Uint8>(c.r),
-                static_cast<sf::Uint8>(c.g),
-                static_cast<sf::Uint8>(c.b),
-                static_cast<sf::Uint8>(c.a)
+                static_cast<sf::Uint8>(c.r * 255),
+                static_cast<sf::Uint8>(c.g * 255),
+                static_cast<sf::Uint8>(c.b * 255),
+                static_cast<sf::Uint8>(c.a * 255)
             ));
         }
     }
