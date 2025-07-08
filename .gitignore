@@ -7,4 +7,3 @@ raytracer
 *.json
 *.so
 build/
-.vscode
