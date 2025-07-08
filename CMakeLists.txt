@@ -148,6 +148,7 @@ add_raytracer_plugin(r_m_Checkboard   "Material/Checkboard")
 add_raytracer_plugin(r_m_glass        "Material/Glass")
 add_raytracer_plugin(r_m_perlin       "Material/Perlin")
 add_raytracer_plugin(r_m_mirror       "Material/Mirror")
+add_raytracer_plugin(r_m_transparent       "Material/Transparent")
 # ╰───────────────────────────────────────────╯
 
 # ╭──────────────── 💡 LIGHTS ───────────────╮
