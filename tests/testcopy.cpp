@@ -1,10 +1,17 @@
+// DemoScene.cpp
+// -----------------------------
+// EPITECH PROJECT - RAYTRACER
+// Scène démonstrative avec primitives, transformations, et lumières
+// -----------------------------
+
 #include "Plugins/Renders/SFML/SFMLRenderer.hpp"
 #include "Plugins/Camera/Camera.hpp"
 #include "Plugins/Primitives/Sphere/Sphere.hpp"
 #include "Plugins/Primitives/Cone/Cone.hpp"
+#include "Plugins/Primitives/Cylinder/Cylinder.hpp"
+#include "Plugins/Primitives/Plane/Plane.hpp"
 #include "Plugins/Material/FlatColor/FlatColor.hpp"
 #include "Plugins/Light/DirectionnalLight/DirectionnalLight.hpp"
-#include "Plugins/Primitives/Plane/Plane.hpp"
 #include "Plugins/Light/AmbientLight/AmbientLight.hpp"
 #include "RayTracer/LightManager/LightManager.hpp"
 #include "RayTracer/Scene/Scene.hpp"
@@ -13,22 +20,19 @@
 
 int main() {
     // === CONFIGURATION DE BASE ===
-    RayTracer::LightManager lightManager;
-    //Resolution de la caméra != de la taille de la fenetre SFML (doit etre quand meme proportionnel a la taille de la fenetre sinon l'image est deformé)
-    Cam::Camera::Resolution res{1280, 720};
-    //Position de la caméra ici on est en recul sur la scene le z est negatif
-    math::Point3D cameraPos(0.0f, 0.0f, -500.0f);
-    //Endroit ou la camera est pointé
-    math::Point3D target(0.0f, 0.0f, 0.0f);
-    //Axe de la caméra ici la caméra est parallèle avec y le haut de la camera est +y
-    math::Vector3D up(0.0f, 1.0f, 0.0f);
-    //Champ de vision
-    float fov = 60.0f;
+    RayTracer::LightManager lightManager; // Gestionnaire de lumière
 
-    Utils::Color bgColor(0.05f, 0.05f, 0.05f, 1.0f);
-    auto cam = std::make_unique<Cam::Camera>(res, cameraPos, target, up, fov);
+    // Création de la caméra
+    Cam::Camera::Resolution res{1280, 720}; // Taille de l'image calculée
+    math::Point3D cameraPos(0.0f, 0.0f, -500.0f); // Position de la caméra
+    math::Point3D target(0.0f, 0.0f, 0.0f); // Point visé par la caméra
+    math::Vector3D up(0.0f, 1.0f, 0.0f); // Orientation verticale de la caméra
+    float fov = 60.0f; // Champ de vision en degrés
 
-    // === MATÉRIAUX ===
+    Utils::Color bgColor(0.05f, 0.05f, 0.1f, 1.0f); // Couleur de fond
+    auto cam = std::make_unique<Cam::Camera>(res, cameraPos, target, up, fov); // Instanciation de la caméra
+
+    // === MATÉRIAUX (COULEURS UNIQUES) ===
     auto pinkMat  = std::make_shared<Material::FlatColor>(Utils::Color(1.0f, 0.41f, 0.71f, 1.0f));
     auto blueMat  = std::make_shared<Material::FlatColor>(Utils::Color(0.27f, 0.51f, 0.71f, 1.0f));
     auto greenMat = std::make_shared<Material::FlatColor>(Utils::Color(0.23f, 0.70f, 0.44f, 1.0f));
@@ -39,46 +43,42 @@ int main() {
     // === PRIMITIVES ===
     std::vector<std::shared_ptr<Primitive::IPrimitive>> primitives;
 
-    // Sphère transformée par rotation autour de son centre
+    // Sphère avec rotation autour de son centre + translation
     auto sphere1 = std::make_shared<Primitive::Sphere>(pinkMat, math::Point3D(0.0f, 0.0f, 300.0f), 100.0f);
-    //Creation d'une matrice de transformation (le constructeur l'initialise a identité)
     math::TransformMatrix trans;
-    //Rotation autour du centre de la primitive (c'est un cercle donc pas de rendu visuel mais crois moi ca tourne)
-    //Et si tu te demande oui on est obligé de passer le point
-    trans.rotateAroundPointY(sphere1->getPosition(), 45.0 * M_PI / 180.0);
-    //On fais une translation +200 sur l'axe y
-    trans.applyTranslation(math::Vector3D(0, 200.0f, 0));
-    //Une fois que la matrix est creer avec toute les transformations on l'applique a la primitive;
-    sphere1->applyTransform(trans);
+    trans.rotateAroundPointY(sphere1->getPosition(), 45.0 * M_PI / 180.0); // Rotation Y autour du centre
+    trans.applyTranslation(math::Vector3D(0, 200.0f, 0)); // Translation en Y
+    sphere1->applyTransform(trans); // Application
     primitives.push_back(sphere1);
 
-    // Plan incliné autour de son point d'origine
+    // Plan incliné via rotation autour de Z
     auto inclinedPlane = std::make_shared<Primitive::Plane>(floorMat, math::Point3D(0.0f, -200.0f, 0.0f), math::Vector3D(0.0f, 1.0f, 0.0f));
     math::TransformMatrix inclineRot;
-    //Meme principe, ici on tourne autour de l'axe Z
     inclineRot.rotateAroundPointZ(inclinedPlane->getPosition(), -15.0 * M_PI / 180.0);
     inclinedPlane->applyTransform(inclineRot);
     primitives.push_back(inclinedPlane);
 
-    // Autres sphères et cones statiques
-    primitives.push_back(std::make_shared<Primitive::Sphere>(greenMat, math::Point3D(-250.0f, -50.0f, 250.0f),  80.0f));
-    //Le a un apex qui est son sommet et lui sert de position
+    // Cône inversé par rotation autour de son sommet
     auto cone = std::make_shared<Primitive::Cone>(blueMat, math::Point3D(250.0f, 100.0f, 0.0f), 200, 100);
-
     math::TransformMatrix t;
-    t.rotateAroundAxis(cone->getPosition(), math::Vector3D(1, 0, 0),  180 * M_PI / 180.0); // incline le cône de 45° autour de X
+    t.rotateAroundAxis(cone->getPosition(), math::Vector3D(1, 0, 0), M_PI); // Rotation X 180°
     cone->applyTransform(t);
     primitives.push_back(cone);
-    // Sol et murs
-    //Un plan prend deux parametre un point par lequel le plan passe et sert de position, et une direction, ici Vector(0, 0, -1) regarde vers nous
+
+    // Cylindre incliné par rotation X puis translation Y
+    auto cylindre = std::make_shared<Primitive::Cylinder>(greenMat, math::Point3D(-250.0f, -50.0f, 250.0f),  200.0f, 70.0f);
+    math::TransformMatrix c;
+    c.rotateAroundAxis(cylindre->getPosition(), math::Vector3D(1, 0, 0),  45 * M_PI / 180.0);
+    c.applyTranslation(math::Vector3D(0, 100.0f, 0));
+    cylindre->applyTransform(c);
+    primitives.push_back(cylindre);
+
+    // Murs : arrière et gauche
     primitives.push_back(std::make_shared<Primitive::Plane>(wallMat,  math::Point3D(0.0f, 0.0f, 600.0f),  math::Vector3D(0.0f, 0.0f, -1.0f)));
     primitives.push_back(std::make_shared<Primitive::Plane>(wallBlue, math::Point3D(-500.0f, 0.0f, 0.0f), math::Vector3D(1.0f, 0.0f, 0.0f)));
 
     // === LUMIÈRES ===
-    //Petit conseil pour la lumiere éviter les couleur avec des valeur a 0 (et toujours utiliser .f)
-    //Par exemple prim(Color(0, 0, 1)) et light(Color(1, 1, 0)) donnera l'impression qu'il n'y a pas de lumiere et c'est normal
     std::vector<std::shared_ptr<Light::ILight>> lights = {
-        //Pour la direction de la lumiere on donne un vector ici (0, -1, 2) va vers y bas, z devant
         std::make_shared<Light::DirectionalLight>(math::Vector3D(0.0f, -1.0f, 2.0f), Utils::Color(0.8f, 0.3f, 0.7f, 1.0f)),
         std::make_shared<Light::DirectionalLight>(math::Vector3D(-1.0f, -1.0f, 2.0f), Utils::Color(0.2f, 1.0f, 0.5f, 1.0f)),
         std::make_shared<Light::DirectionalLight>(math::Vector3D(-1.0f, 0.0f, 0.0f), Utils::Color(1.0f, 1.0f, 0.5f, 1.0f)),
@@ -86,33 +86,34 @@ int main() {
     };
 
     // === SCÈNE ===
-    RayTracer::Scene scene(primitives, lights, std::move(cam));
-    const auto& sceneCam = scene.getCamera();
+    RayTracer::Scene scene(primitives, lights, std::move(cam)); // Composition de la scène
+    const auto& sceneCam = scene.getCamera(); // Caméra utilisée
 
     // === RENDU ===
     std::vector<std::vector<Utils::HitRecord>> hitArray(res.height, std::vector<Utils::HitRecord>(res.width));
     for (int y = 0; y < res.height; ++y) {
         for (int x = 0; x < res.width; ++x) {
-            Utils::Ray ray = sceneCam.generateRay(x, y);
+            Utils::Ray ray = sceneCam.generateRay(x, y); // Génère un rayon pour chaque pixel
             Utils::HitRecord record;
             if (scene.trace(ray, record)) {
-                Utils::Color color = lightManager.computeLighting(record, scene, ray);
+                Utils::Color color = lightManager.computeLighting(record, scene, ray); // Lumière appliquée
                 record.setColor(color);
                 hitArray[y][x] = record;
             } else {
-                hitArray[y][x] = Utils::HitRecord(); // fond
+                hitArray[y][x] = Utils::HitRecord(); // Arrière-plan
             }
         }
     }
 
-    // === AFFICHAGE SFML ===
+    // === AFFICHAGE AVEC SFML ===
     Renderer::SFMLRenderer sfml;
     sfml.openWindow(res.width, res.height, bgColor);
     while (sfml.isOpen()) {
-        while (sfml.pollEvent()) {}
-        sfml.clean();
-        sfml.drawPixelArray(hitArray);
-        sfml.display();
+        while (sfml.pollEvent()) {} // Gestion des événements
+        sfml.clean(); // Efface l'écran
+        sfml.drawPixelArray(hitArray); // Affiche les pixels
+        sfml.display(); // Met à jour la fenêtre
     }
+
     return 0;
 }

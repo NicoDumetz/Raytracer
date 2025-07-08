@@ -9,6 +9,8 @@ SRC =	main.cpp \
 		src/Plugins/Camera/Camera.cpp \
 		src/Plugins/Primitives/Sphere/Sphere.cpp \
 		src/Plugins/Primitives/Plane/Plane.cpp \
+		src/Plugins/Primitives/Cone/Cone.cpp \
+		src/Plugins/Primitives/Cylinder/Cylinder.cpp \
 		src/Plugins/Renders/SFML/SFMLRenderer.cpp \
 		src/Plugins/Material/FlatColor/FlatColor.cpp \
 		src/Plugins/Light/AmbientLight/AmbientLight.cpp \
