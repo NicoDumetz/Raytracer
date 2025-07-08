@@ -9,7 +9,7 @@
 
 class Color {
 public:
-    Color() : r(0), g(0), b(0) {}
+    Color() : r(0), g(0), b(0), a(255) {}
     Color(unsigned short red,
         unsigned short green,
         unsigned short blue,
