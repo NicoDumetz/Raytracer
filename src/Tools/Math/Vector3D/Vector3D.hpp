@@ -41,6 +41,8 @@ public:
     void operator*=(double scalar);
     Vector3D operator/(double scalar) const;
     void operator/=(double scalar);
+
+    double operator[](int axe) const;
 };
 inline std::ostream& operator<<(std::ostream& os, const Vector3D& vec)
 {
