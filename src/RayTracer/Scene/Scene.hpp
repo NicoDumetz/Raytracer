@@ -50,7 +50,7 @@ namespace RayTracer
 
         bool hasCamera() const;
         const Cam::ICamera& getCamera() const;
-
+        const std::shared_ptr<Utils::BVHNode> &getBVH() const {return _BVHRoot;};
         const std::vector<std::shared_ptr<Primitive::IPrimitive>>& getPrimitives() const;
         const std::vector<std::shared_ptr<Scene>>& getChildren() const;
         const std::vector<std::shared_ptr<Light::ILight>>& getLights() const;

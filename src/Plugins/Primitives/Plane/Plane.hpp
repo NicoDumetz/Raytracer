@@ -35,11 +35,11 @@ namespace Primitive
 
         Utils::AABB calculateBox() const
         {
-            double maxRange = 1e6;
-            math::Vector3D min(-maxRange, -maxRange, -maxRange);
-            math::Vector3D max(maxRange, maxRange, maxRange);
-
-            return Utils::AABB(min, max);
+            const double k = 1e6;
+            return Utils::AABB(
+                math::Vector3D(-k, _position.y - 0.1, -k),
+            math::Vector3D(k, _position.y + 0.1, k)
+            );
         }
     };
 }

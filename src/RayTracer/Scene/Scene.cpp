@@ -21,7 +21,7 @@ Scene::Scene(std::vector<std::shared_ptr<Primitive::IPrimitive>> primitives,
       _backgroundColor(backgroundColor),
       _antialiasingType(antialiasingType),
       _antialiasingSamples(antialiasingSamples),
-      _BVHRoot(Utils::BVHNode::buildBVH(primitives, 0, primitives.size())) {}
+      _BVHRoot(Utils::BVHNode::buildBVH(_primitives, 0, _primitives.size())) {}
 
 bool Scene::trace(const Utils::Ray& ray, Utils::HitRecord& record) const
 {

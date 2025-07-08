@@ -20,8 +20,8 @@ bool AABB::intersect(const Ray &ray, float tMin, float tMax) const
         t0 = (_min[i] - ray.O[i] * invD);
         t1 = (_max[i] - ray.O[i] * invD);
         if (invD < 0.0f) std::swap(t0, t1);
-        tMin = std::max(static_cast<double>(tMin), t0);
-        tMax = std::max(static_cast<double>(tMax), t1);
+        tMin = (t0 > tMin) ? t0 : tMin;
+        tMax = (t1 < tMax) ? t1 : tMax;
         if (tMax <= tMin) return false;
     }
     return true;

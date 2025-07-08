@@ -39,28 +39,37 @@ std::shared_ptr<BVHNode> BVHNode::buildBVH(std::vector<std::shared_ptr<Primitive
 
 bool BVHNode::hit(const Ray &ray, HitRecord &record, float tMin, float tMax) const
 {
-    if (!_box.intersect(ray, tMin, tMax))
+    if (!_box.intersect(ray, tMin, tMax)) {
         return false;
-
+    }
     bool hitAnything = false;
-    HitRecord tempRecord;
 
     if (_primitive) {
-        if (_primitive->hit(ray, record) && tempRecord.getDistance() < tMax) {
-            record = tempRecord;
-            tMax = record.getDistance();
-            hitAnything = true;
+        HitRecord tempRecord;
+        if (_primitive->hit(ray, tempRecord)) {
+            double t = tempRecord.getDistance();
+            if (t >= tMin && t < tMax) {
+                record = tempRecord;
+                hitAnything = true;
+            }
     }
     } else {
-        if (_left && _left->hit(ray, tempRecord, tMin, tMax)) {
-            record = tempRecord;
-            tMax = record.getDistance();
-            hitAnything = true;
+        float closest = tMax;
+        if (_left) {
+            HitRecord leftRecord;
+            if (_left->hit(ray, leftRecord, tMin, closest)) {
+                record = leftRecord;
+                closest = record.getDistance();
+                hitAnything = true;
+            }
         }
-        if (_right && _right->hit(ray, tempRecord, tMin, tMax)) {
-            record = tempRecord;
-            tMax = record.getDistance();
-            hitAnything = true;
+        if (_left) {
+            HitRecord rightRecord;
+            if (_left->hit(ray, rightRecord, tMin, closest)) {
+                record = rightRecord;
+                closest = record.getDistance();
+                hitAnything = true;
+            }
         }
     }
     return hitAnything;
