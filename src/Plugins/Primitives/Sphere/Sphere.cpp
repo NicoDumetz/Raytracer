@@ -20,7 +20,7 @@ Sphere::Sphere(const Utils::ConfigNode& node)
     if (!node.has("radius"))
         throw std::runtime_error("[Sphere] Missing 'radius' in config node.");
     _radius = std::stof(node.get("radius"));
-    this->applyNodeTransform(node, _position);
+    this->applyNodeTransform(node);
 }
 
 bool Sphere::hit(const Utils::Ray &ray, Utils::HitRecord &record) const

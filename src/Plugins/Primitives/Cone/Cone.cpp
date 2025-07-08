@@ -25,7 +25,7 @@ Cone::Cone(const Utils::ConfigNode& node)
         throw std::runtime_error("[Cone] Missing 'radius' or 'height' in config node.");
     _radius = std::stof(node.get("radius"));
     _height = std::stof(node.get("height"));
-    this->applyNodeTransform(node, _apex);
+    this->applyNodeTransform(node);
 }
 
 bool Cone::hit(const Utils::Ray& ray, Utils::HitRecord& record) const

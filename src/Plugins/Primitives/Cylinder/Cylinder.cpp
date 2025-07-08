@@ -25,7 +25,7 @@ Cylinder::Cylinder(const Utils::ConfigNode& node)
 
     _radius = std::stof(node.get("radius"));
     _height = std::stof(node.get("height"));
-    this->applyNodeTransform(node, _base);
+    this->applyNodeTransform(node);
 }
 
 bool Cylinder::hit(const Utils::Ray& ray, Utils::HitRecord& record) const

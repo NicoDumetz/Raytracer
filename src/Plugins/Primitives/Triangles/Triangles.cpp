@@ -27,7 +27,7 @@ Triangle::Triangle(const Utils::ConfigNode& node)
     _b = node.parsePoint3D("b");
     _c = node.parsePoint3D("c");
     _normal = ((_b - _a).cross(_c - _a)).normalized();
-    this->applyNodeTransform(node, _position);
+    this->applyNodeTransform(node);
 }
 
 bool Triangle::hit(const Utils::Ray& ray, Utils::HitRecord& record) const
