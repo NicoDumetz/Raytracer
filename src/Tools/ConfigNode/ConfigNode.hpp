@@ -14,7 +14,7 @@
 #include <sstream>
 #include <memory>
 
-namespace RayTracer
+namespace Utils
 {
     class ConfigNode {
     public:

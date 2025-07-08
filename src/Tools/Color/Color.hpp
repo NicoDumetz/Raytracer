@@ -6,18 +6,30 @@
 */
 
 #pragma once
+#include <iostream>
 
-class Color {
-public:
-    Color() : r(0), g(0), b(0) {}
-    Color(unsigned short red,
-        unsigned short green,
-        unsigned short blue,
-        unsigned short alpha)
-    : r(red), g(green), b(blue), a(alpha) {}
-    
-    unsigned short r;
-    unsigned short g;
-    unsigned short b;
-    unsigned short a;
-};
+namespace Utils
+{
+    class Color {
+    public:
+        Color() : r(0), g(0), b(0), a(255) {}
+        Color(float red,
+            float green,
+            float blue,
+            float alpha)
+        : r(red), g(green), b(blue), a(alpha) {}
+        
+        float r;
+        float g;
+        float b;
+        float a;
+    };
+    inline std::ostream& operator<<(std::ostream& os, const Color& color) {
+        os << "Color(r=" << color.r
+           << ", g=" << color.g
+           << ", b=" << color.b
+           << ", a=" << color.a << ")";
+        return os;
+    }
+} // namespace Utils
+
