@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../math/Vector3D/Vector3D.hpp"
+#include "../../math/Vector3D/Vector3D.hpp"
 // #include "../math/Point3D/Point3D.hpp"
 
 namespace RayTracer
@@ -15,10 +15,10 @@ namespace RayTracer
 class Ray
 {
 public:
-    Point3D _origin;
-    Vector3D _direction;
+    math::Point3D _origin;
+    math::Vector3D _direction;
     Ray();
-    Ray(Point3D origin, Vector3D direction);
+    Ray(math::Point3D origin, math::Vector3D direction);
     ~Ray() = default;
 private:
 };
