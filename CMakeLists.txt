@@ -82,6 +82,12 @@ add_library(r_m_flatcolor SHARED ${FLATCOLOR_SRC})
 set_target_properties(r_m_flatcolor PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
 target_link_libraries(r_m_flatcolor raytracer_common)
 
+file(GLOB_RECURSE GLASS_SRC "${PLUGIN_DIR}/Material/Glass/*.cpp")
+add_library(r_m_glass SHARED ${GLASS_SRC})
+set_target_properties(r_m_glass PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
+target_link_libraries(r_m_glass raytracer_common)
+
+
 # LIGHTS
 file(GLOB_RECURSE AMBIENT_SRC "${PLUGIN_DIR}/Light/AmbientLight/*.cpp")
 add_library(r_l_ambient SHARED ${AMBIENT_SRC})

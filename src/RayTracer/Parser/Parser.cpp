@@ -85,6 +85,11 @@ void RayTracer::SceneParser::parseMaterials(const libconfig::Setting& root)
         node.setField("type", mat["type"]);
         if (mat.exists("color"))
             node.setField("color", formatColor(mat["color"]));
+        if (mat.exists("ior")) {
+                float ior;
+                mat.lookupValue("ior", ior);  // plus sûr
+                node.setField("ior", std::to_string(ior));
+            }
         _nodes.push_back(node);
     }
 }
