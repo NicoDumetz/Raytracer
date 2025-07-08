@@ -124,8 +124,13 @@ namespace RayTracer {
             {"ior", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
                 float ior = static_cast<float>(setting);
                 node.setField("ior", std::to_string(ior));
-            }}
-
+            }},
+            {"colorTop", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("colorTop", formatColor(setting));
+            }},
+            {"colorBottom", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("colorBottom", formatColor(setting));
+            }},
         };
 
         const std::unordered_map<std::string, FieldHandler> _lightFieldHandlers = {

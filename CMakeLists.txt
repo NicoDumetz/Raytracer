@@ -111,13 +111,23 @@ target_link_libraries(raytracer
 ##     Reusable function to add any plugin easily                                     ##
 ##                                                                                    ##
 ########################################################################################
-function(add_raytracer_plugin target subdir)
+
+function(add_raytracer_plugin target subdir use_sfml)
     file(GLOB_RECURSE SRC "${PLUGIN_DIR}/${subdir}/*.cpp")
     add_library(${target} SHARED ${SRC})
-    set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
+    set_target_properties(${target} PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR}
+        PREFIX ""
+    )
     target_link_libraries(${target} raytracer_common)
+    if(${use_sfml})
+        target_link_libraries(${target}
+            sfml-graphics
+            sfml-window
+            sfml-system
+        )
+    endif()
 endfunction()
-
 
 ########################################################################################
 ##                                                                                    ##
@@ -127,37 +137,39 @@ endfunction()
 ########################################################################################
 
 # ╭────────────── 🔷 PRIMITIVES ──────────────╮
-add_raytracer_plugin(r_p_sphere           "Primitives/Sphere")
-add_raytracer_plugin(r_p_plane            "Primitives/Plane")
-add_raytracer_plugin(r_p_cone             "Primitives/Cone")
-add_raytracer_plugin(r_p_cylinder         "Primitives/Cylinder")
-add_raytracer_plugin(r_p_triangles        "Primitives/Triangles")
-add_raytracer_plugin(r_p_Cube             "Primitives/Cube")
-add_raytracer_plugin(r_p_LimitedCone      "Primitives/LimitedCone")
-add_raytracer_plugin(r_p_LimitedCylinder  "Primitives/LimitedCylinder")
-add_raytracer_plugin(r_p_Torus            "Primitives/Torus")
+add_raytracer_plugin(r_p_sphere           "Primitives/Sphere"           OFF)
+add_raytracer_plugin(r_p_plane            "Primitives/Plane"            OFF)
+add_raytracer_plugin(r_p_cone             "Primitives/Cone"             OFF)
+add_raytracer_plugin(r_p_cylinder         "Primitives/Cylinder"         OFF)
+add_raytracer_plugin(r_p_triangles        "Primitives/Triangles"        OFF)
+add_raytracer_plugin(r_p_Cube             "Primitives/Cube"             OFF)
+add_raytracer_plugin(r_p_LimitedCone      "Primitives/LimitedCone"      OFF)
+add_raytracer_plugin(r_p_LimitedCylinder  "Primitives/LimitedCylinder"  OFF)
+add_raytracer_plugin(r_p_Torus            "Primitives/Torus"            OFF)
 # ╰───────────────────────────────────────────╯
 
 # ╭──────────────── 🎥 CAMERA ────────────────╮
-add_raytracer_plugin(r_c_camera       "Camera")
+add_raytracer_plugin(r_c_camera           "Camera"                      OFF)
 # ╰───────────────────────────────────────────╯
 
 # ╭─────────────── 🎨 MATERIALS ──────────────╮
-add_raytracer_plugin(r_m_flatcolor    "Material/FlatColor")
-add_raytracer_plugin(r_m_Checkboard   "Material/Checkboard")
-add_raytracer_plugin(r_m_glass        "Material/Glass")
-add_raytracer_plugin(r_m_perlin       "Material/Perlin")
-add_raytracer_plugin(r_m_mirror       "Material/Mirror")
+add_raytracer_plugin(r_m_flatcolor        "Material/FlatColor"          OFF)
+add_raytracer_plugin(r_m_Checkboard       "Material/Checkboard"         OFF)
+add_raytracer_plugin(r_m_glass            "Material/Glass"              OFF)
+add_raytracer_plugin(r_m_perlin           "Material/Perlin"             OFF)
+add_raytracer_plugin(r_m_mirror           "Material/Mirror"             OFF)
+add_raytracer_plugin(r_m_transparent      "Material/Transparent"        OFF)
+add_raytracer_plugin(r_m_gradient         "Material/Gradient"           OFF)
 # ╰───────────────────────────────────────────╯
 
 # ╭──────────────── 💡 LIGHTS ───────────────╮
-add_raytracer_plugin(r_l_ambient      "Light/AmbientLight")
-add_raytracer_plugin(r_l_directional  "Light/DirectionnalLight")
-add_raytracer_plugin(r_l_pointLight   "Light/PointLight")
+add_raytracer_plugin(r_l_ambient          "Light/AmbientLight"          OFF)
+add_raytracer_plugin(r_l_directional      "Light/DirectionnalLight"     OFF)
+add_raytracer_plugin(r_l_pointLight       "Light/PointLight"            OFF)
 # ╰──────────────────────────────────────────╯
 
 # ╭────────────── 🖼️ RENDERER ───────────────╮
-add_raytracer_plugin(r_r_sfml         "Renders/SFML")
+add_raytracer_plugin(r_r_sfml             "Renders/SFML"                ON)
 # ╰──────────────────────────────────────────╯
 
 ########################################################################################
@@ -167,7 +179,7 @@ add_raytracer_plugin(r_r_sfml         "Renders/SFML")
 ##                                                                                    ##
 ########################################################################################
 add_custom_target(my_clean
-    COMMAND find ${CMAKE_BINARY_DIR} -type f -name "*.o" -exec rm -f {} \;
+    COMMAND find ${CMAKE_BINARY_DIR} -type f -name "*.o" -exec rm -f {} \\\;
     COMMENT "Cleaning object files (.o)..."
 )
 

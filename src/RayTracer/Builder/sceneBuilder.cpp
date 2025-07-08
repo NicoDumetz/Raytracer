@@ -21,6 +21,9 @@ RayTracer::SceneBuilder::SceneBuilder(
     _cameraFactory(cameraFactory),
     _nodes(nodes)
 {
+    _backgroundColor = Utils::Color(0, 0, 0, 1);
+    _antialiasingType = AntialiasingType::NONE;
+    _antialiasingSamples = 1;
     buildScene();
 }
 
@@ -34,7 +37,7 @@ void RayTracer::SceneBuilder::buildScene()
     }
     if (!_camera)
         throw std::runtime_error("No camera found while building scene.");
-    _scene = Scene(std::move(_primitives), std::move(_lights), std::move(_camera));
+    _scene = Scene(std::move(_primitives), std::move(_lights), std::move(_camera), _backgroundColor, _antialiasingType, _antialiasingSamples);
 }
 
 void RayTracer::SceneBuilder::handleMaterial(const Utils::ConfigNode& node)
@@ -63,19 +66,19 @@ void RayTracer::SceneBuilder::handleGlobalSettings(const Utils::ConfigNode& node
         float r, g, b, a;
         std::sscanf(colorStr.c_str(), "%f,%f,%f,%f", &r, &g, &b, &a);
         Utils::Color bg(r, g, b, a);
-        _scene.setBackgroundColor(bg);
+        _backgroundColor = bg;
     }
 
     if (node.has("antialiasing_type")) {
         const std::string& typeStr = node.get("antialiasing_type");
         AntialiasingType aaType = parseAntialiasingType(typeStr);
-        _scene.setAntialiasingType(aaType);
+        _antialiasingType = aaType;
     }
 
     if (node.has("antialiasing_samples")) {
         const std::string& samplesStr = node.get("antialiasing_samples");
         int samples = std::stoi(samplesStr);
-        _scene.setAntialiasingSamples(samples);
+        _antialiasingSamples = samples;
     }
 }
 
