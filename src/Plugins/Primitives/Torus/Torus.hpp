@@ -19,27 +19,12 @@ public:
 
     bool hit(const Utils::Ray& ray, Utils::HitRecord& record) const override;
 
-    const Utils::AABB getBoundingBox() const {return calculateBox();};
+
 private:
-    double _majorRadius;
-    double _minorRadius;
+double _majorRadius;
+double _minorRadius;
     std::vector<double> solveQuartic(double A, double B, double C, double D, double E) const;
     std::vector<double> intersectTorusBody(const Utils::Ray& localRay) const;
-
-    Utils::AABB calculateBox() const
-    {
-        double minX = _position.x - (_majorRadius + _minorRadius);
-        double maxX = _position.x + (_majorRadius + _minorRadius);
-        double minY = _position.y - _minorRadius;
-        double maxY = _position.y + _minorRadius;
-        double minZ = _position.z - (_majorRadius + _minorRadius);
-        double maxZ = _position.z + (_majorRadius + _minorRadius);
-
-        math::Vector3D min(minX, minY, minZ);
-        math::Vector3D max(maxX, maxY, maxZ);
-
-        return Utils::AABB(min, max);
-    }
 };
 
 }

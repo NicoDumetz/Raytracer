@@ -22,18 +22,8 @@ namespace Primitive {
 
         bool hit(const Utils::Ray& ray, Utils::HitRecord& record) const override;
 
-        const Utils::AABB getBoundingBox() const {return calculateBox();};
     private:
         double _halfSize;
-
-    Utils::AABB calculateBox() const
-    {
-        math::Vector3D positionVec = math::Vector3D(_position.x, _position.y, _position.z);
-        math::Vector3D min = positionVec - math::Vector3D(_halfSize, _halfSize, _halfSize);
-        math::Vector3D max = positionVec + math::Vector3D(_halfSize, _halfSize, _halfSize);
-
-        return Utils::AABB(min, max);
-    }
     };
 }
 

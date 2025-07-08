@@ -16,8 +16,8 @@
 #include "Factory/Factory.hpp"
 #include "RayTracer/LightManager/LightManager.hpp"
 #include <regex>
+#include <string>
 #include <thread>
-#include <chrono>
 
 #define PLUGIN_PATH std::string("./plugins/")
 namespace RayTracer
@@ -25,9 +25,10 @@ namespace RayTracer
     class Core
     {
     public:
-        Core(const std::string& filename, char** env);
+        Core(const std::string& filename, const std::string& ppmFilename, char** env);
         ~Core() = default;
 
+        static bool parseArgs(int argc, char **argv, std::string& configFile, std::string& ppmFile);
         void checkEnvDisplay(char** env);
         const Scene& getScene() const { return _sceneBuilder->getScene();};
         void run();
@@ -36,6 +37,7 @@ namespace RayTracer
         LibLoader _libLoader;
         std::unique_ptr<SceneParser> _parser;
         std::unique_ptr<SceneBuilder> _sceneBuilder;
+        const std::string& _ppmFilename;
 
         std::shared_ptr<Factory<Primitive::IPrimitive>> _primitiveFactory;
         std::shared_ptr<Factory<Material::IMaterial>> _materialFactory;
@@ -83,5 +85,6 @@ namespace RayTracer
                 this->_render = getInstance<Renderer::IRenderer>(lib);
             }}
         };
+        void writePPM(const std::vector<std::vector<Utils::Color>> &pixelsArray) const;
     };
 }
