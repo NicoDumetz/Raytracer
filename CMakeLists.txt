@@ -8,16 +8,25 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -Werror -fno-gnu-unique
 
 ## Directories ##
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
+set(PLUGINS_DIR ${CMAKE_SOURCE_DIR}/plugins)
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(CORE_DIR ${SRC_DIR}/Core)
 set(FACTORY_DIR ${SRC_DIR}/Factory)
 set(INTERFACE_DIR ${SRC_DIR}/Interface)
 set(SOURCE_PLUGINS_DIR ${SRC_DIR}/Plugins)
+set(PLUGIN_CAMERA_DIR ${SOURCE_PLUGINS_DIR}/Camera)
+set(PLUGIN_LIGHT_DIR ${SOURCE_PLUGINS_DIR}/Light)
+set(PLUGIN_MATERIAL_DIR ${SOURCE_PLUGINS_DIR}/Material)
+set(PLUGIN_PRIMITIVES_DIR ${SOURCE_PLUGINS_DIR}/Primitives)
+set(PLUGIN_RENDERS_DIR ${SOURCE_PLUGINS_DIR}/Renders)
 set(RAYTRACER_DIR ${SRC_DIR}/RayTracer)
+set(BUILDER_DIR ${RAYTRACER_DIR}/Builder)
+set(CAMERA_DIR ${RAYTRACER_DIR}/Camera)
+set(LIGHT_MANAGER_DIR ${RAYTRACER_DIR}/LightManager)
+set(PARSER_DIR ${RAYTRACER_DIR}/Parser)
+set(SCENE_DIR ${RAYTRACER_DIR}/Scene)
+set(SHARED_DIR ${SRC_DIR}/Shared)
 set(TOOLS_DIR ${SRC_DIR}/Tools)
-set(SHARED_DIR ${SRC_DIR}/shared)
-set(PLUGINS_DIR ${CMAKE_SOURCE_DIR}/plugins)
-set(SOURCE_LIB_DIR ${CMAKE_SOURCE_DIR}/src/plugins)
 
 # GLOBAL INCLUDE
 file(GLOB_RECURSE CORE_SRC "${SRC_DIR}/Core/*.cpp")
@@ -32,7 +41,7 @@ add_executable(raytracer ${SRC_DIR}/main.cpp ${CORE_SRC})
 # SFML #
 # find_package(SFML 2.6.0 COMPONENTS graphics window system REQUIRED)
 # file(GLOB_RECURSE SFML_SRC "${SOURCE_PLUGINS_DIR}/SFML/*.cpp")
-# include_directories(${SOURCE_PLUGINS_DIR}/SFML)
+# include_directories(${PLUGIN_RENDERS_DIR}/SFML)
 # add_library(raytracer_sfml SHARED ${SFML_SRC})
 # target_link_libraries(raytracer_sfml sfml-graphics sfml-window sfml-system)
 # set_target_properties(raytracer_sfml PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
@@ -40,20 +49,22 @@ add_executable(raytracer ${SRC_DIR}/main.cpp ${CORE_SRC})
 ## PRIMITIVES ##
 
 # SPHERE #
-file(GLOB_RECURSE SPHERE_SRC "${SOURCE_PLUGINS_DIR}/Sphere/*.cpp")
-include_directories(${SOURCE_PLUGINS_DIR}/Sphere)
+file(GLOB_RECURSE SPHERE_SRC "${PLUGIN_PRIMITIVES_DIR}/Sphere/*.cpp")
+include_directories(${PLUGIN_PRIMITIVES_DIR})
+include_directories(${PLUGIN_PRIMITIVES_DIR}/Sphere)
 add_library(r_p_sphere SHARED ${SPHERE_SRC})
 set_target_properties(r_p_sphere PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
 
 # PLANE #
-file(GLOB_RECURSE PLANE_SRC "${SOURCE_PLUGINS_DIR}/Plane/*.cpp")
-include_directories(${SOURCE_PLUGINS_DIR}/Plane)
+file(GLOB_RECURSE PLANE_SRC "${PLUGIN_PRIMITIVES_DIR}/Plane/*.cpp")
+include_directories(${PLUGIN_PRIMITIVES_DIR})
+include_directories(${PLUGIN_PRIMITIVES_DIR}/Plane)
 add_library(r_p_plane SHARED ${PLANE_SRC})
 set_target_properties(r_p_plane PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
 
-# TO ADD A LIBRARY :
+# TO ADD A LIBRARY (see sphere):
 # add a file(path to the *.cpp)
-# include_directory(path to *.hpp)
+# include_directory(path to *.hpp directories)
 # add_librabry(store lib into TOTO_SRC (tmp dir))
 # set_target_propreties(set path where to put the lib and the prefix)
 
