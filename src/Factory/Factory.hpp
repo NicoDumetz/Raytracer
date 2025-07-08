@@ -26,14 +26,14 @@ namespace RayTracer
         {
             _registry[name] = std::move(creator);
         }
-
-        std::unique_ptr<T> create(const Utils::ConfigNode& cfg) const {
-            auto type = cfg.get("type");
-            std::cout << "Creating object of type: " << type << std::endl;
-            auto it = _registry.find(type);
+        std::unique_ptr<T> create(const Utils::ConfigNode& cfg) const
+        {
+            auto it = _registry.find(cfg.getName());
             if (it != _registry.end())
                 return it->second(cfg);
-            throw std::runtime_error("Factory error : type '" + type + "' not registered.");
+            throw std::runtime_error("Factory error : type '"
+                + cfg.getName()
+                + "' not registered.");
         }
 
     private:

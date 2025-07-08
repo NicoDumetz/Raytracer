@@ -37,11 +37,22 @@ void RayTracer::SceneBuilder::buildScene()
     _scene = Scene(std::move(_primitives), std::move(_lights), std::move(_camera));
 }
 
+template<typename T>
+void RayTracer::SceneBuilder::handleGenericVector(const Utils::ConfigNode& node, const std::shared_ptr<Factory<T>>& factory, std::vector<std::shared_ptr<T>>& output)
+{
+    output.push_back(factory->create(node));
+}
+
+template<typename T>
+void RayTracer::SceneBuilder::handleGenericUnique(const Utils::ConfigNode& node, const std::shared_ptr<Factory<T>>& factory, std::unique_ptr<T>& output)
+{
+    output = factory->create(node);
+}
+
 void RayTracer::SceneBuilder::handleMaterial(const Utils::ConfigNode& node)
 {
-    const std::string& name = node.getName();
     auto material = _materialFactory->create(node);
-    _materials[name] = std::move(material);
+    _materials[node.getName()] = std::move(material);
 }
 
 void RayTracer::SceneBuilder::handlePrimitive(const Utils::ConfigNode& node)

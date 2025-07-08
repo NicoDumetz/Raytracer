@@ -17,9 +17,6 @@
 #include <cmath>
 #include "Cylinder.hpp"
 #include <cmath>
-#include "Tools/ConfigNode/ConfigNode.hpp"
-#include "Shared/LibraryType.hpp"
-#include "Factory/Factory.hpp"
 
 namespace Primitive {
 

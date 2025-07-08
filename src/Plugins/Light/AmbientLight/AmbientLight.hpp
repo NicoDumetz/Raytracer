@@ -9,8 +9,6 @@
 
 #include "Interface/ILight.hpp"
 #include "Tools/ConfigNode/ConfigNode.hpp"
-#include "Shared/LibraryType.hpp"
-#include "Factory/Factory.hpp"
 
 
 namespace Light {

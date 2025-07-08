@@ -37,23 +37,3 @@ Light::DirectionalLight::DirectionalLight(const Utils::ConfigNode& node)
       _intensity(node.parseColor("color"))
 {
 }
-
-extern "C" {
-
-    void registerPlugin(RayTracer::Factory<Light::ILight>& factory)
-    {
-        factory.addCreator("directional", [](const Utils::ConfigNode& node) {
-            return std::make_unique<Light::DirectionalLight>(node);
-        });
-    }
-
-    RayTracer::Ltype type()
-    {
-        return RayTracer::Ltype::LIGHT;
-    }
-
-    const char* name()
-    {
-        return "directional";
-    }
-}
