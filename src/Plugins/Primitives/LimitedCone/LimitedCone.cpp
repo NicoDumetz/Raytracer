@@ -8,6 +8,7 @@
 #include "LimitedCone.hpp"
 #include <cmath>
 #include <limits>
+#include <optional>
 
 namespace Primitive {
 
@@ -43,32 +44,51 @@ bool LimitedCone::hit(const Utils::Ray& ray, Utils::HitRecord& record) const
     double b = 2 * (oc.x * d.x + oc.z * d.z - k2 * oc.y * d.y);
     double c = oc.x * oc.x + oc.z * oc.z - k2 * oc.y * oc.y;
     double disc = b * b - 4 * a * c;
+    std::optional<std::pair<double, math::Point3D>> bestHit;
+    math::Vector3D bestNormal;
 
-    if (disc < 0)
+    if (disc >= 0) {
+        double sqrtDisc = std::sqrt(disc);
+        double t1 = (-b - sqrtDisc) / (2 * a);
+        double t2 = (-b + sqrtDisc) / (2 * a);
+        for (double t : {t1, t2}) {
+            if (t > 0.001) {
+                math::Point3D localHit = localRay.at(t);
+                double yLocal = localHit.y - _position.y;
+                if (yLocal >= _minY && yLocal <= _maxY) {
+                    bestHit = std::make_pair(t, localHit);
+                    bestNormal = math::Vector3D(
+                        localHit.x,
+                        k2 * yLocal,
+                        localHit.z
+                    ).normalized();
+                }
+            }
+        }
+    }
+    for (auto [yOffset, normalDir] : std::array<std::pair<double, double>, 2>{
+            {{_minY, -1.0}, {_maxY, 1.0}}}) {
+        double yCap = _position.y + yOffset;
+        if (std::abs(d.y) > 1e-6) {
+            double t = (yCap - o.y) / d.y;
+            if (t > 0.001) {
+                math::Point3D p = localRay.at(t);
+                double dx = p.x - _position.x;
+                double dz = p.z - _position.z;
+                double r = (yOffset / _height) * _radius;
+                if (dx * dx + dz * dz <= r * r) {
+                    if (!bestHit || t < bestHit->first) {
+                        bestHit = std::make_pair(t, p);
+                        bestNormal = math::Vector3D(0, normalDir, 0);
+                    }
+                }
+            }
+        }
+    }
+    if (!bestHit)
         return false;
-    double sqrtDisc = std::sqrt(disc);
-    double t1 = (-b - sqrtDisc) / (2 * a);
-    double t2 = (-b + sqrtDisc) / (2 * a);
-    double t = -1.0;
-    if (t1 > 0.001 && t2 > 0.001)
-        t = std::min(t1, t2);
-    else if (t1 > 0.001)
-        t = t1;
-    else if (t2 > 0.001)
-        t = t2;
-    if (t < 0)
-        return false;
-    math::Point3D localHit = localRay.at(t);
-    double yLocal = localHit.y - _position.y;
-    if (yLocal < _minY || yLocal > _maxY)
-        return false;
-    math::Point3D worldHit = _transform.transform(localHit);
-    math::Vector3D localNormal = math::Vector3D(
-        localHit.x,
-        k2 * (localHit.y - _position.y),
-        localHit.z
-    ).normalized();
-    math::Vector3D worldNormal = _transform.rotateVector(localNormal).normalized();
+    math::Point3D worldHit = _transform.transform(bestHit->second);
+    math::Vector3D worldNormal = _transform.rotateVector(bestNormal).normalized();
     if (worldNormal.dot(ray.getDirection()) > 0)
         worldNormal = -worldNormal;
     record.setDistance((worldHit - ray.getOrigin()).length());
