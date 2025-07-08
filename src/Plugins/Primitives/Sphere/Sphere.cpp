@@ -20,6 +20,7 @@ Sphere::Sphere(const Utils::ConfigNode& node)
     if (!node.has("radius"))
         throw std::runtime_error("[Sphere] Missing 'radius' in config node.");
     _radius = std::stof(node.get("radius"));
+    this->applyNodeTransform(node);
 }
 
 bool Sphere::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
@@ -55,14 +56,8 @@ bool Sphere::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
     record.setMaterial(_material);
     return true;
 }
-// void Sphere::applyTransform(const math::TransformMatrix &transform)
-// {
-//     _position = transform.transform(_position);
-//     math::Vector3D scaled = transform.transform(math::Vector3D(_radius, 0, 0));
-//     _radius = scaled.length();
-// }
-} // namespace RayTracer
 
+}
 extern "C" {
 
     void registerPlugin(RayTracer::Factory<Primitive::IPrimitive>& factory)

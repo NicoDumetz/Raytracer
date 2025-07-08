@@ -18,6 +18,7 @@ Plane::Plane(const Utils::ConfigNode& node)
     : APrimitive(node.getMaterial(), node.parsePoint3D("point"))
 {
     _normal = node.parseVector3("normal").normalized();
+    this->applyNodeTransform(node);
 }
 
 bool Plane::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
