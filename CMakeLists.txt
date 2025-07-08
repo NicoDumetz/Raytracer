@@ -28,7 +28,7 @@
 
 ########################################################################################
 ##                                                                                    ##
-##     🔧 PROJECT SETUP                                                               ##
+##     PROJECT SETUP                                                                  ##
 ##     Defines project name, C++ standard and compilation flags                       ##
 ##                                                                                    ##
 ########################################################################################
@@ -42,7 +42,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -fPIC")
 
 ########################################################################################
 ##                                                                                    ##
-##     📁 DIRECTORY STRUCTURE                                                         ##
+##     DIRECTORY STRUCTURE                                                            ##
 ##     Defines main folders for source, build and plugins                             ##
 ##                                                                                    ##
 ########################################################################################
@@ -57,7 +57,7 @@ set(TOOLS_DIR ${SRC_DIR}/Tools)
 
 ########################################################################################
 ##                                                                                    ##
-##     📌 INCLUDE DIRECTORIES                                                         ##
+##     INCLUDE DIRECTORIES                                                            ##
 ##     Header file include paths for compilation                                      ##
 ##                                                                                    ##
 ########################################################################################
@@ -68,7 +68,7 @@ include_directories(${TOOLS_DIR})
 
 ########################################################################################
 ##                                                                                    ##
-##     📦 CORE SOURCES                                                                ##
+##     CORE SOURCES                                                                   ##
 ##     Gathers all non-plugin .cpp files                                              ##
 ##                                                                                    ##
 ########################################################################################
@@ -78,7 +78,7 @@ list(FILTER CORE_SRC EXCLUDE REGEX ".*/Plugins/.*")
 
 ########################################################################################
 ##                                                                                    ##
-##     📚 COMMON STATIC LIBRARY                                                       ##
+##     COMMON STATIC LIBRARY                                                          ##
 ##     Shared tools (math, config, scene, etc.) built as static lib                   ##
 ##                                                                                    ##
 ########################################################################################
@@ -91,7 +91,7 @@ add_library(raytracer_common STATIC ${COMMON_SRC})
 
 ########################################################################################
 ##                                                                                    ##
-##     🚀 MAIN EXECUTABLE                                                             ##
+##     MAIN EXECUTABLE                                                                ##
 ##     Builds the final 'raytracer' binary                                            ##
 ##                                                                                    ##
 ########################################################################################
@@ -99,82 +99,72 @@ add_executable(raytracer ${CORE_SRC})
 target_link_libraries(raytracer
     raytracer_common
     config++
-    sfml-graphics
-    sfml-window
-    sfml-system
 )
 
 
 ########################################################################################
 ##                                                                                    ##
-##     🧩 PLUGIN MANAGEMENT FUNCTION                                                  ##
+##     PLUGIN MANAGEMENT FUNCTION                                                     ##
 ##     Reusable function to add any plugin easily                                     ##
 ##                                                                                    ##
 ########################################################################################
 
-function(add_raytracer_plugin target subdir use_sfml)
+function(add_raytracer_plugin target subdir link_libs)
     file(GLOB_RECURSE SRC "${PLUGIN_DIR}/${subdir}/*.cpp")
     add_library(${target} SHARED ${SRC})
     set_target_properties(${target} PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR}
         PREFIX ""
     )
-    target_link_libraries(${target} raytracer_common)
-    if(${use_sfml})
-        target_link_libraries(${target}
-            sfml-graphics
-            sfml-window
-            sfml-system
-        )
-    endif()
+    target_link_libraries(${target} raytracer_common ${link_libs})
 endfunction()
 
 ########################################################################################
 ##                                                                                    ##
-##     🧩 PLUGINS : DYNAMIC MODULES                                                   ##
+##     PLUGINS : DYNAMIC MODULES                                                      ##
 ##     All shared object (.so) plugins dynamically loaded by the raytracer engine     ##
 ##                                                                                    ##
 ########################################################################################
 
-# ╭────────────── 🔷 PRIMITIVES ──────────────╮
-add_raytracer_plugin(r_p_sphere           "Primitives/Sphere"           OFF)
-add_raytracer_plugin(r_p_plane            "Primitives/Plane"            OFF)
-add_raytracer_plugin(r_p_cone             "Primitives/Cone"             OFF)
-add_raytracer_plugin(r_p_cylinder         "Primitives/Cylinder"         OFF)
-add_raytracer_plugin(r_p_triangles        "Primitives/Triangles"        OFF)
-add_raytracer_plugin(r_p_Cube             "Primitives/Cube"             OFF)
-add_raytracer_plugin(r_p_LimitedCone      "Primitives/LimitedCone"      OFF)
-add_raytracer_plugin(r_p_LimitedCylinder  "Primitives/LimitedCylinder"  OFF)
-add_raytracer_plugin(r_p_Torus            "Primitives/Torus"            OFF)
+# ╭────────────── PRIMITIVES ──────────────╮
+add_raytracer_plugin(r_p_sphere           "Primitives/Sphere"           "")
+add_raytracer_plugin(r_p_plane            "Primitives/Plane"            "")
+add_raytracer_plugin(r_p_cone             "Primitives/Cone"             "")
+add_raytracer_plugin(r_p_cylinder         "Primitives/Cylinder"         "")
+add_raytracer_plugin(r_p_triangles        "Primitives/Triangles"        "")
+add_raytracer_plugin(r_p_Cube             "Primitives/Cube"             "")
+add_raytracer_plugin(r_p_LimitedCone      "Primitives/LimitedCone"      "")
+add_raytracer_plugin(r_p_LimitedCylinder  "Primitives/LimitedCylinder"  "")
+add_raytracer_plugin(r_p_Torus            "Primitives/Torus"            "")
 # ╰───────────────────────────────────────────╯
 
-# ╭──────────────── 🎥 CAMERA ────────────────╮
-add_raytracer_plugin(r_c_camera           "Camera"                      OFF)
+# ╭──────────────── CAMERA ────────────────╮
+add_raytracer_plugin(r_c_camera           "Camera"                      "")
 # ╰───────────────────────────────────────────╯
 
-# ╭─────────────── 🎨 MATERIALS ──────────────╮
-add_raytracer_plugin(r_m_flatcolor        "Material/FlatColor"          OFF)
-add_raytracer_plugin(r_m_Checkboard       "Material/Checkboard"         OFF)
-add_raytracer_plugin(r_m_glass            "Material/Glass"              OFF)
-add_raytracer_plugin(r_m_perlin           "Material/Perlin"             OFF)
-add_raytracer_plugin(r_m_mirror           "Material/Mirror"             OFF)
-add_raytracer_plugin(r_m_transparent      "Material/Transparent"        OFF)
-add_raytracer_plugin(r_m_gradient         "Material/Gradient"           OFF)
+# ╭─────────────── MATERIALS ──────────────╮
+add_raytracer_plugin(r_m_flatcolor        "Material/FlatColor"          "")
+add_raytracer_plugin(r_m_Checkboard       "Material/Checkboard"         "")
+add_raytracer_plugin(r_m_glass            "Material/Glass"              "")
+add_raytracer_plugin(r_m_perlin           "Material/Perlin"             "")
+add_raytracer_plugin(r_m_mirror           "Material/Mirror"             "")
+add_raytracer_plugin(r_m_transparent      "Material/Transparent"        "")
+add_raytracer_plugin(r_m_gradient         "Material/Gradient"           "")
 # ╰───────────────────────────────────────────╯
 
-# ╭──────────────── 💡 LIGHTS ───────────────╮
-add_raytracer_plugin(r_l_ambient          "Light/AmbientLight"          OFF)
-add_raytracer_plugin(r_l_directional      "Light/DirectionnalLight"     OFF)
-add_raytracer_plugin(r_l_pointLight       "Light/PointLight"            OFF)
+# ╭──────────────── LIGHTS ───────────────╮
+add_raytracer_plugin(r_l_ambient          "Light/AmbientLight"          "")
+add_raytracer_plugin(r_l_directional      "Light/DirectionnalLight"     "")
+add_raytracer_plugin(r_l_pointLight       "Light/PointLight"            "")
 # ╰──────────────────────────────────────────╯
 
-# ╭────────────── 🖼️ RENDERER ───────────────╮
-add_raytracer_plugin(r_r_sfml             "Renders/SFML"                ON)
+# ╭────────────── RENDERER ───────────────╮
+add_raytracer_plugin(r_r_sfml             "Renders/SFML"                "sfml-graphics;sfml-window;sfml-system")
 # ╰──────────────────────────────────────────╯
 
 ########################################################################################
 ##                                                                                    ##
-##     🛠️  CUSTOM BUILD COMMANDS                                                      ##
+##     CUSTOM BUILD COMMANDS                                                          ##
 ##     Manual tools: clean, fclean, rebuild                                           ##
 ##                                                                                    ##
 ########################################################################################

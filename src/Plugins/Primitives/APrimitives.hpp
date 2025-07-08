@@ -52,6 +52,9 @@ namespace Primitive
                 math::Point3D center = node.has("center") ? node.parsePoint3D("center") : pos;
                 T.rotateAroundPointZ(center, node.parseFloat("rotateZ") * M_PI / 180.0f);
             }},
+            {"scale", [](math::TransformMatrix& T, const Utils::ConfigNode& node, const math::Point3D&) {
+                T.applyScaling(node.parseVector3("scale"));
+            }},
         };
 
     public:
