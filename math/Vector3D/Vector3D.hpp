@@ -25,24 +25,14 @@ public:
     double length() const;
     double dot(Vector3D &other) const;
 
-    /* arithmetic operators */
-    Vector3D &operator +(const Vector3D &other) const;
-    Vector3D &operator +=(const Vector3D &other);
-    Vector3D &operator -(const Vector3D &other) const;
-    Vector3D &operator -=(const Vector3D &other);
-    Vector3D &operator *(const Vector3D &other) const;
-    Vector3D &operator *=(const Vector3D &other);
-    Vector3D &operator /(const Vector3D &other) const;
-    Vector3D &operator /=(const Vector3D &other);
+    Vector3D &operator+(const Vector3D &other) const;
+    void operator+=(const Vector3D &other);
+    Vector3D &operator-(const Vector3D &other) const;
+    void operator-=(const Vector3D &other);
 
-    Vector3D &operator *(double value) const;
-    Vector3D &operator *=(double value);
-    Vector3D &operator /(double value) const;
-    Vector3D &operator /=(double value);
-
-    Vector3D &operator +(const Point3D &other) const;
-    Vector3D &operator +=(const Point3D &other);
-    Vector3D &operator -(const Point3D &other) const;
-    Vector3D &operator -=(const Point3D &other);
+    Vector3D &operator*(double value) const;
+    void operator*=(double value);
+    Vector3D &operator/(double value) const;
+    void operator/=(double value);
 };
 } // namespace math

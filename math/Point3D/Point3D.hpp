@@ -23,21 +23,24 @@ public:
     ~Point3D() = default;
 
     Point3D &operator+(const Point3D &point) const;
-    Point3D &operator+=(const Point3D &point);
+    void operator+=(const Point3D &point);
     Point3D &operator-(const Point3D &point) const;
-    Point3D &operator-=(const Point3D &point);
-    Point3D &operator/(const Point3D &point) const;
-    Point3D &operator/=(const Point3D &point);
-    Point3D &operator*(const Point3D &point) const;
-    Point3D &operator*=(const Point3D &point);
+    void operator-=(const Point3D &point);
 
     Point3D &operator+(const Vector3D &vector) const;
-    Point3D &operator+=(const Vector3D &vector);
+    void operator+=(const Vector3D &vector);
     Point3D &operator-(const Vector3D &vector) const;
-    Point3D &operator-=(const Vector3D &vector);
-    Point3D &operator/(const Vector3D &vector) const;
-    Point3D &operator/=(const Vector3D &vector);
-    Point3D &operator*(const Vector3D &vector) const;
-    Point3D &operator*=(const Vector3D &vector);
+    void operator-=(const Vector3D &vector);
+
+    Point3D &operator+(const double &value) const;
+    void operator+=(const double &value);
+    Point3D &operator-(const double &value) const;
+    void operator-=(const double &value);
+    Point3D &operator/(const double &value) const;
+    void operator/=(const double &value);
+    Point3D &operator*(const double &value) const;
+    void operator*=(const double &value);
+
+    void rotate(const Vector3D &axe, const double &angle);
 };
 } // namespace math
