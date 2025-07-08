@@ -61,12 +61,26 @@ void RayTracer::Core::run()
     const auto res = cam.getResolution();
     const Utils::Color& bgColor = scene.getBackgroundColor();
     std::vector<std::vector<Utils::Color>> pixelArray(res.height, std::vector<Utils::Color>(res.width));
+    const int threadCount = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads;
+    int rowPerThread = res.height / threadCount;
 
-    for (int y = 0; y < res.height; ++y) {
-        for (int x = 0; x < res.width; ++x) {
-            pixelArray[y][x] = lightManager.traceRay(cam.generateRay(x, y), scene, 0);
+    auto traceSection = [&](int startY, int endY) {
+        for (int y = startY; y < endY; y++) {
+            for (int x = 0; x < res.width; x++)
+                pixelArray[y][x] = lightManager.traceRay(cam.generateRay(x, y), scene, 3);
         }
+    };
+    for (int i = 0; i < threadCount; i++) {
+        int startY = i * rowPerThread;
+        int endY = (i == threadCount - 1) ? res.height : startY + rowPerThread;
+        threads.emplace_back(traceSection, startY, endY);
     }
+    for (auto &t : threads) {
+        t.join();
+        std::cout << "thread joined." << std::endl;
+    }
+
     _render->openWindow(res.width, res.height, bgColor);
     while (_render->isOpen()) {
         while (_render->pollEvent()) {}

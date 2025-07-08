@@ -40,15 +40,6 @@ namespace Utils
             c.a = a + o.a;
             return c;
         }
-        Color operator * (const Color& o) {
-            Color c;
-        
-            c.r = r * o.r;
-            c.g = g * o.g;
-            c.b = b * o.b;
-            c.a = a * o.a;
-            return c;
-        }
     };
     inline Color operator*(const Color& color, float scalar) {
         return Color(
