@@ -1,6 +1,7 @@
 #include "Plugins/Renders/SFML/SFMLRenderer.hpp"
 #include "Plugins/Camera/Camera.hpp"
 #include "Plugins/Primitives/Sphere/Sphere.hpp"
+#include "Plugins/Primitives/Cone/Cone.hpp"
 #include "Plugins/Material/FlatColor/FlatColor.hpp"
 #include "Plugins/Light/DirectionnalLight/DirectionnalLight.hpp"
 #include "Plugins/Primitives/Plane/Plane.hpp"
@@ -59,10 +60,15 @@ int main() {
     inclinedPlane->applyTransform(inclineRot);
     primitives.push_back(inclinedPlane);
 
-    // Autres sphères statiques
+    // Autres sphères et cones statiques
     primitives.push_back(std::make_shared<Primitive::Sphere>(greenMat, math::Point3D(-250.0f, -50.0f, 250.0f),  80.0f));
-    primitives.push_back(std::make_shared<Primitive::Sphere>(blueMat,  math::Point3D( 250.0f,  50.0f, 300.0f),  80.0f));
+    //Le a un apex qui est son sommet et lui sert de position
+    auto cone = std::make_shared<Primitive::Cone>(blueMat, math::Point3D(250.0f, 100.0f, 0.0f), 200, 100);
 
+    math::TransformMatrix t;
+    t.rotateAroundAxis(cone->getPosition(), math::Vector3D(1, 0, 0),  180 * M_PI / 180.0); // incline le cône de 45° autour de X
+    cone->applyTransform(t);
+    primitives.push_back(cone);
     // Sol et murs
     //Un plan prend deux parametre un point par lequel le plan passe et sert de position, et une direction, ici Vector(0, 0, -1) regarde vers nous
     primitives.push_back(std::make_shared<Primitive::Plane>(wallMat,  math::Point3D(0.0f, 0.0f, 600.0f),  math::Vector3D(0.0f, 0.0f, -1.0f)));
