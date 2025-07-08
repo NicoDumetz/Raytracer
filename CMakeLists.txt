@@ -13,6 +13,7 @@
 #                       Main build configuration for Raytracer and its plugin                       #
 #                                                                                                   #
 #  -> Configure  : cmake -B build -DCMAKE_BUILD_TYPE=Debug                                          #
+#  -> Plugins      : cmake --build build --target my_plugins                                        #
 #  -> Build      : cmake --build build                                                              #
 #  -> Clean      : cmake --build build --target my_clean                                            #
 #  -> Full clean : cmake --build build --target my_fclean                                           #
