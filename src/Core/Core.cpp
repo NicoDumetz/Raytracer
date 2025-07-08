@@ -65,8 +65,7 @@ void RayTracer::Core::run()
     std::vector<std::thread> threads;
     int rowPerThread = res.height / threadCount;
     auto start = std::chrono::high_resolution_clock::now();
-    if (scene.getBVH() == nullptr)
-        throw std::runtime_error("emtpy bvh.");
+
     auto traceSection = [&](int startY, int endY) {
         for (int y = startY; y < endY; y++) {
             for (int x = 0; x < res.width; x++)
@@ -83,6 +82,7 @@ void RayTracer::Core::run()
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "Elapsed time: " << duration.count() << " seconds\n";
+
     _render->openWindow(res.width, res.height, bgColor);
     while (_render->isOpen()) {
         while (_render->pollEvent()) {}

@@ -35,19 +35,6 @@ bool Scene::trace(const Utils::Ray& ray, Utils::HitRecord& record) const
             hitAnything = true;
         }
     }
-    // } else {
-    //     double epsilon = 1e-8;
-    //     for (const auto& primitive : _primitives) {
-    //         if (primitive->hit(ray, tempRecord)) {
-    //             double t = tempRecord.getDistance();
-    //             if (t < epsilon || t >= closest)
-    //                 continue;
-    //             closest = t;
-    //             record = tempRecord;
-    //             hitAnything = true;
-    //         }
-    //     }
-    // }
     return hitAnything;
 }
 

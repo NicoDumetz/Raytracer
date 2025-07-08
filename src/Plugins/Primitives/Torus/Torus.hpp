@@ -35,10 +35,10 @@ private:
         double minZ = _position.z - (_majorRadius + _minorRadius);
         double maxZ = _position.z + (_majorRadius + _minorRadius);
 
-    math::Vector3D min(minX, minY, minZ);
-    math::Vector3D max(maxX, maxY, maxZ);
+        math::Vector3D min(minX, minY, minZ);
+        math::Vector3D max(maxX, maxY, maxZ);
 
-    return Utils::AABB(min, max);
+        return Utils::AABB(min, max);
     }
 };
 
