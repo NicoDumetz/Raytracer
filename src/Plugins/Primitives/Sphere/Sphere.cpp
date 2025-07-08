@@ -44,7 +44,11 @@ bool Sphere::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
 
     if (t < 0)
         return false;
+    return hitSphere(localRay, record, t, ray);
+}
 
+bool Sphere::hitSphere(Utils::Ray localRay, Utils::HitRecord &record, double t, const Utils::Ray &ray) const
+{
     math::Point3D localHit = localRay.at(t);
     math::Point3D worldHit = _transform.transform(localHit);
     math::Vector3D localNormal = (localHit - _position).normalized();
@@ -56,7 +60,6 @@ bool Sphere::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
     record.setMaterial(_material);
     return true;
 }
-
 }
 extern "C" {
 

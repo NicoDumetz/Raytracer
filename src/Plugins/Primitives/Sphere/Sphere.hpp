@@ -27,6 +27,10 @@ namespace Primitive
 
             ~Sphere() = default;
             bool hit(const Utils::Ray &, Utils::HitRecord &) const;
+            bool hitSphere(Utils::Ray localRay,
+                Utils::HitRecord &record,
+                double t,
+                const Utils::Ray &ray) const;
 
         private:
             double _radius;

@@ -23,9 +23,6 @@ Plane::Plane(const Utils::ConfigNode& node)
 
 bool Plane::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
 {
-    /* std::cout << "Passe dans hit" << std::endl;
-    std::cout << "Transform" << std::endl << _transform << std::endl;
-    std::cout << "Inverse" << std::endl <<_inverseTransform << std::endl; */
     const double epsilon = 1e-6;
 
     Utils::Ray localRay = _inverseTransform.transform(ray);

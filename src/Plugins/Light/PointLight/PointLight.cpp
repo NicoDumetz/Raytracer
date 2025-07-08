@@ -30,7 +30,7 @@ Utils::Color PointLight::illuminate(
     Utils::Ray shadowRay(P + L * eps, L);
     Utils::HitRecord tmp;
     if (scene.trace(shadowRay, tmp) && tmp.getDistance() < distance)
-        return Utils::Color(0, 0, 0, 1.0f); // Ombre un objet bloque la lumière
+        return Utils::Color(0, 0, 0, 1.0f);
     float dotNL = std::max(0.0f, static_cast<float>(N.dot(L)));
     return Utils::Color(
         _intensity.r * dotNL,

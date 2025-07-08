@@ -28,7 +28,7 @@ std::optional<math::Vector3D> LightManager::refract(
     }
     float k = 1.0f - (etai/etat)*(etai/etat)*(1.0f - cosi*cosi);
     if (k < 0.0f)
-        return std::nullopt;  // réflexion totale interne
+        return std::nullopt;
     return (I*(etai/etat) + n*(etai/etat * cosi - std::sqrt(k))).normalized();
 }
 
@@ -40,7 +40,6 @@ Utils::Color LightManager::computeDirectLighting(
     for (const auto& light : scene.getLights()) {
         sum += light->illuminate(hit, scene);
     }
-    // clamp
     sum.r = std::clamp(sum.r, 0.0f, 1.0f);
     sum.g = std::clamp(sum.g, 0.0f, 1.0f);
     sum.b = std::clamp(sum.b, 0.0f, 1.0f);
@@ -96,11 +95,18 @@ Utils::Color LightManager::traceRay(
     Utils::Color refrColor(0,0,0,1);
     if (props.transparency > 0.0f) {
         if (auto T = refract(D, N, props.refractiveIndex)) {
-            Utils::Ray refrRay(rec.getPosition() - N*EPS, *T);
-            refrColor = traceRay(refrRay, scene, depth+1)
-                      * props.transparency;
+            Utils::Ray refrRay(rec.getPosition() + *T * EPS, *T);
+            refrColor = traceRay(refrRay, scene, depth)
+          * props.transparency
+          * albedo;
+
         }
     }
-    return local + reflColor + refrColor;
+    Utils::Color result = local + reflColor + refrColor;
+    result.r = std::clamp(result.r, 0.0f, 1.0f);
+    result.g = std::clamp(result.g, 0.0f, 1.0f);
+    result.b = std::clamp(result.b, 0.0f, 1.0f);
+    return result;
+
 }
-} // namespace RayTracer
+}

@@ -31,11 +31,10 @@ namespace Primitive {
         ~Cone() = default;
 
         bool hit(const Utils::Ray& ray, Utils::HitRecord& record) const override;
-        bool hitBottomCap(
+        bool hitCone(
                 const Utils::Ray &ray,
                 Utils::HitRecord &record,
-                const Utils::Ray &localRay,
-                const math::Vector3D &d) const;
+                const math::Point3D &localHit) const;
     private:
         math::Point3D _apex;
         double _height;

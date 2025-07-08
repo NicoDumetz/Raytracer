@@ -22,24 +22,18 @@ namespace Primitive {
     public:
         Cylinder(std::shared_ptr<Material::IMaterial> material,
                  math::Point3D base,
-                 double height,
                  double radius);
     
         Cylinder(const Utils::ConfigNode& node);
         ~Cylinder() override = default;
     
         bool hit(const Utils::Ray& ray, Utils::HitRecord& record) const override;
-        bool topCapHit(const Utils::Ray &ray,
-            Utils::HitRecord &record,
-            const Utils::Ray &localRay,
-            const math::Vector3D &d) const;
-        bool botCapHit(const Utils::Ray &ray,
-            Utils::HitRecord &record,
-            const Utils::Ray &localRay,
-            const math::Vector3D &d) const;
+        bool cylinderHit(Utils::Ray localRay,
+            const Utils::Ray& ray,
+            Utils::HitRecord& record,
+            double t) const;
     private:
         math::Point3D _base;
-        double _height;
         double _radius;
     };
 } // namespace Primitive

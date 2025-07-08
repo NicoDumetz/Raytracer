@@ -54,61 +54,33 @@ bool Cone::hit(const Utils::Ray& ray, Utils::HitRecord& record) const
         if (t > 0) {
             math::Point3D localHit = localRay.at(t);
             double y = localHit.y - _apex.y;
-            if (y >= 0 && y <= _height) {
-                math::Vector3D hitVec = localHit - _apex;
-                double len = std::sqrt(hitVec.x * hitVec.x + hitVec.z * hitVec.z);
-                if (len == 0)
-                    return false;
-                double cosAlpha = _height / std::sqrt(_height * _height + _radius * _radius);
-                double sinAlpha = std::sqrt(1 - cosAlpha * cosAlpha);
-
-                math::Vector3D projected = math::Vector3D(hitVec.x, 0, hitVec.z).normalized();
-                math::Vector3D localNormal = (projected * cosAlpha - math::Vector3D(0, sinAlpha, 0)).normalized();
-
-                math::Point3D worldHit = _transform.transform(localHit);
-                math::Vector3D worldNormal = _transform.rotateVector(localNormal).normalized();
-
-                record.setDistance((worldHit - ray.getOrigin()).length());
-                record.setPosition(worldHit);
-                record.setNormal(worldNormal);
-                record.setMaterial(_material);
-                return true;
-            }
-        }
-    }
-
-    return hitBottomCap(ray, record, localRay, d);
-}
-
-bool Cone::hitBottomCap(
-    const Utils::Ray &ray,
-    Utils::HitRecord &record,
-    const Utils::Ray &localRay,
-    const math::Vector3D &d) const
-{
-    math::Point3D baseCenter = _apex + math::Vector3D(0, _height, 0);
-    math::Vector3D capNormal(0, 1, 0);
-    double denom = capNormal.dot(d);
-    if (std::abs(denom) > 1e-6) {
-        double t_cap = (baseCenter - localRay.getOrigin()).dot(capNormal) / denom;
-        if (t_cap > 0.001) {
-            math::Point3D p_cap = localRay.at(t_cap);
-            math::Vector3D dist = p_cap - baseCenter;
-            if (dist.length() <= _radius) {
-                math::Point3D worldHit = _transform.transform(p_cap);
-                math::Vector3D worldNormal = _transform.rotateVector(capNormal).normalized();
-
-                record.setDistance((worldHit - ray.getOrigin()).length());
-                record.setPosition(worldHit);
-                record.setNormal(worldNormal);
-                record.setMaterial(_material);
-                return true;
-            }
+            if (y >= 0)
+                return hitCone(ray, record, localHit);
         }
     }
     return false;
 }
 
+bool Cone::hitCone(const Utils::Ray &ray, Utils::HitRecord &record, const math::Point3D &localHit) const
+{
+    math::Vector3D hitVec = localHit - _apex;
+    double len = std::sqrt(hitVec.x * hitVec.x + hitVec.z * hitVec.z);
+    if (len == 0)
+        return false;
+
+    double cosAlpha = _height / std::sqrt(_height * _height + _radius * _radius);
+    double sinAlpha = std::sqrt(1 - cosAlpha * cosAlpha);
+    math::Vector3D projected = math::Vector3D(hitVec.x, 0, hitVec.z).normalized();
+    math::Vector3D localNormal = (projected * cosAlpha - math::Vector3D(0, sinAlpha, 0)).normalized();
+    math::Point3D worldHit = _transform.transform(localHit);
+    math::Vector3D worldNormal = _transform.rotateVector(localNormal).normalized();
+
+    record.setDistance((worldHit - ray.getOrigin()).length());
+    record.setPosition(worldHit);
+    record.setNormal(worldNormal);
+    record.setMaterial(_material);
+    return true;
+}
 } // namespace Primitive
 
 extern "C" {
