@@ -107,88 +107,49 @@ target_link_libraries(raytracer
 
 ########################################################################################
 ##                                                                                    ##
-##     🧩 PLUGINS : PRIMITIVES                                                        ##
-##     Dynamic objects: Sphere, Cone, Plane, Cylinder                                 ##
+##     🧩 PLUGIN MANAGEMENT FUNCTION                                                  ##
+##     Reusable function to add any plugin easily                                     ##
 ##                                                                                    ##
 ########################################################################################
-file(GLOB_RECURSE SPHERE_SRC "${PLUGIN_DIR}/Primitives/Sphere/*.cpp")
-add_library(r_p_sphere SHARED ${SPHERE_SRC})
-set_target_properties(r_p_sphere PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
-target_link_libraries(r_p_sphere raytracer_common)
-
-file(GLOB_RECURSE PLANE_SRC "${PLUGIN_DIR}/Primitives/Plane/*.cpp")
-add_library(r_p_plane SHARED ${PLANE_SRC})
-set_target_properties(r_p_plane PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
-target_link_libraries(r_p_plane raytracer_common)
-
-file(GLOB_RECURSE CONE_SRC "${PLUGIN_DIR}/Primitives/Cone/*.cpp")
-add_library(r_p_cone SHARED ${CONE_SRC})
-set_target_properties(r_p_cone PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
-target_link_libraries(r_p_cone raytracer_common)
-
-file(GLOB_RECURSE CYLINDER_SRC "${PLUGIN_DIR}/Primitives/Cylinder/*.cpp")
-add_library(r_p_cylinder SHARED ${CYLINDER_SRC})
-set_target_properties(r_p_cylinder PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
-target_link_libraries(r_p_cylinder raytracer_common)
+function(add_raytracer_plugin target subdir)
+    file(GLOB_RECURSE SRC "${PLUGIN_DIR}/${subdir}/*.cpp")
+    add_library(${target} SHARED ${SRC})
+    set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
+    target_link_libraries(${target} raytracer_common)
+endfunction()
 
 
 ########################################################################################
 ##                                                                                    ##
-##     🎥 PLUGINS : CAMERA                                                            ##
-##     Dynamic camera component                                                       ##
+##     🧩 PLUGINS : DYNAMIC MODULES                                                   ##
+##     All shared object (.so) plugins dynamically loaded by the raytracer engine     ##
 ##                                                                                    ##
 ########################################################################################
-file(GLOB_RECURSE CAMERA_SRC "${PLUGIN_DIR}/Camera/*.cpp")
-add_library(r_c_camera SHARED ${CAMERA_SRC})
-set_target_properties(r_c_camera PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
-target_link_libraries(r_c_camera raytracer_common)
 
+# ╭────────────── 🔷 PRIMITIVES ──────────────╮
+add_raytracer_plugin(r_p_sphere       "Primitives/Sphere")
+add_raytracer_plugin(r_p_plane        "Primitives/Plane")
+add_raytracer_plugin(r_p_cone         "Primitives/Cone")
+add_raytracer_plugin(r_p_cylinder     "Primitives/Cylinder")
+# ╰───────────────────────────────────────────╯
 
-########################################################################################
-##                                                                                    ##
-##     🎨 PLUGINS : MATERIALS                                                         ##
-##     Materials like Glass and FlatColor                                             ##
-##                                                                                    ##
-########################################################################################
-file(GLOB_RECURSE FLATCOLOR_SRC "${PLUGIN_DIR}/Material/FlatColor/*.cpp")
-add_library(r_m_flatcolor SHARED ${FLATCOLOR_SRC})
-set_target_properties(r_m_flatcolor PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
-target_link_libraries(r_m_flatcolor raytracer_common)
+# ╭──────────────── 🎥 CAMERA ────────────────╮
+add_raytracer_plugin(r_c_camera       "Camera")
+# ╰───────────────────────────────────────────╯
 
-file(GLOB_RECURSE GLASS_SRC "${PLUGIN_DIR}/Material/Glass/*.cpp")
-add_library(r_m_glass SHARED ${GLASS_SRC})
-set_target_properties(r_m_glass PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
-target_link_libraries(r_m_glass raytracer_common)
+# ╭─────────────── 🎨 MATERIALS ──────────────╮
+add_raytracer_plugin(r_m_flatcolor    "Material/FlatColor")
+add_raytracer_plugin(r_m_glass        "Material/Glass")
+# ╰───────────────────────────────────────────╯
 
+# ╭──────────────── 💡 LIGHTS ───────────────╮
+add_raytracer_plugin(r_l_ambient      "Light/AmbientLight")
+add_raytracer_plugin(r_l_directional  "Light/DirectionnalLight")
+# ╰──────────────────────────────────────────╯
 
-########################################################################################
-##                                                                                    ##
-##     💡 PLUGINS : LIGHTS                                                            ##
-##     Lighting models: Ambient and Directional                                       ##
-##                                                                                    ##
-########################################################################################
-file(GLOB_RECURSE AMBIENT_SRC "${PLUGIN_DIR}/Light/AmbientLight/*.cpp")
-add_library(r_l_ambient SHARED ${AMBIENT_SRC})
-set_target_properties(r_l_ambient PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
-target_link_libraries(r_l_ambient raytracer_common)
-
-file(GLOB_RECURSE DIRECTIONAL_SRC "${PLUGIN_DIR}/Light/DirectionnalLight/*.cpp")
-add_library(r_l_directional SHARED ${DIRECTIONAL_SRC})
-set_target_properties(r_l_directional PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
-target_link_libraries(r_l_directional raytracer_common)
-
-
-########################################################################################
-##                                                                                    ##
-##     🖼️  PLUGINS : RENDERER                                                         ##
-##     Backend renderer using SFML                                                    ##
-##                                                                                    ##
-########################################################################################
-file(GLOB_RECURSE SFML_RENDERER_SRC "${PLUGIN_DIR}/Renders/SFML/*.cpp")
-add_library(r_r_sfml SHARED ${SFML_RENDERER_SRC})
-set_target_properties(r_r_sfml PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
-target_link_libraries(r_r_sfml raytracer_common)
-
+# ╭────────────── 🖼️ RENDERER ───────────────╮
+add_raytracer_plugin(r_r_sfml         "Renders/SFML")
+# ╰──────────────────────────────────────────╯
 
 ########################################################################################
 ##                                                                                    ##
