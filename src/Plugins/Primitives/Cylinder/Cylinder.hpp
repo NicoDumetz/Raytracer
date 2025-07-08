@@ -32,20 +32,8 @@ namespace Primitive {
             const Utils::Ray& ray,
             Utils::HitRecord& record,
             double t) const;
-
-        const Utils::AABB getBoundingBox() const {return calculateBox();};
     private:
         math::Point3D _base;
         double _radius;
-
-        Utils::AABB calculateBox() const
-        {
-            math::Vector3D baseVec = math::Vector3D(_base.x, _base.y, _base.z);
-            double height = 2 * _radius;
-            math::Vector3D min = baseVec - math::Vector3D(_radius, 0, _radius);
-            math::Vector3D max = baseVec + math::Vector3D(_radius, height, _radius);
-
-            return Utils::AABB(min, max);
-        }
     };
 } // namespace Primitive

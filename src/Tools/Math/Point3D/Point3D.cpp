@@ -47,14 +47,4 @@ void Point3D::operator-=(const Vector3D &vec)
     y -= vec.y;
     z -= vec.z;
 }
-
-double Point3D::operator[](int axe) const {
-    if (axe == 0)
-        return x;
-    if (axe == 1)
-        return y;
-    if (axe == 2)
-        return z;
-    throw std::runtime_error("invalid axe from vector");
-}
 }

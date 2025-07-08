@@ -7,6 +7,7 @@
 
 
 #include "LimitedCylinder.hpp"
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include "LimitedCylinder.hpp"
