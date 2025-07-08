@@ -8,9 +8,11 @@
 #pragma once
 
 #include <cmath>
+#include "../Point3D/Point3D.hpp"
 
 namespace math
 {
+
 class Vector3D
 {
 public:
@@ -23,14 +25,24 @@ public:
     double length() const;
     double dot(Vector3D &other) const;
 
-    Vector3D operator+(const Vector3D &other) const;
-    void operator+=(const Vector3D &other);
-    Vector3D operator-(const Vector3D &other) const;
-    void operator-=(const Vector3D &other);
+    /* arithmetic operators */
+    Vector3D &operator +(const Vector3D &other) const;
+    Vector3D &operator +=(const Vector3D &other);
+    Vector3D &operator -(const Vector3D &other) const;
+    Vector3D &operator -=(const Vector3D &other);
+    Vector3D &operator *(const Vector3D &other) const;
+    Vector3D &operator *=(const Vector3D &other);
+    Vector3D &operator /(const Vector3D &other) const;
+    Vector3D &operator /=(const Vector3D &other);
 
-    Vector3D operator*(double value) const;
-    void operator*=(double value);
-    Vector3D operator/(double value) const;
-    void operator/=(double value);
+    Vector3D &operator *(double value) const;
+    Vector3D &operator *=(double value);
+    Vector3D &operator /(double value) const;
+    Vector3D &operator /=(double value);
+
+    Vector3D &operator +(const Point3D &other) const;
+    Vector3D &operator +=(const Point3D &other);
+    Vector3D &operator -(const Point3D &other) const;
+    Vector3D &operator -=(const Point3D &other);
 };
 } // namespace math

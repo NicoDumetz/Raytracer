@@ -21,7 +21,7 @@ public:
 
     Sphere(math::Point3D center, double radius);
     ~Sphere() = default;
-    bool hit(Ray &ray) const {return false;};
+    bool hit(Ray &ray) const;
 private:
 };
 } // namespace RayTracer

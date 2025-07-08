@@ -12,116 +12,118 @@
 namespace math
 {
 
-Point3D Point3D::operator+(const Point3D &point) const
+Point3D &Point3D::operator+(const Point3D &point) const
 {
     Point3D new_point(x + point.x, y + point.y, z + point.z);
     return new_point;
 }
 
-void Point3D::operator+=(const Point3D &point)
+Point3D &Point3D::operator+=(const Point3D &point)
 {
-    x += point.x;
-    y += point.y;
-    z += point.z;
+    x + point.x;
+    y + point.y;
+    z + point.z;
+    return *this;
 }
 
-Point3D Point3D::operator-(const Point3D &point) const
+Point3D &Point3D::operator-(const Point3D &point) const
 {
     Point3D new_point(x - point.x, y - point.y, z - point.z);
     return new_point;
 }
 
-void Point3D::operator-=(const Point3D &point)
+Point3D &Point3D::operator-=(const Point3D &point)
 {
-    x -= point.x;
-    y -= point.y;
-    z -= point.z;
+    x - point.x;
+    y - point.y;
+    z - point.z;
+    return *this;
 }
+
+Point3D &Point3D::operator*(const Point3D &point) const
+{
+    Point3D new_point(x * point.x, y * point.y, z * point.z);
+    return new_point;
+}
+
+Point3D &Point3D::operator*=(const Point3D &point)
+{
+    x * point.x;
+    y * point.y;
+    z * point.z;
+    return *this;
+}
+
+Point3D &Point3D::operator/(const Point3D &point) const
+{
+    Point3D new_point(x / point.x, y / point.y, z / point.z);
+    return new_point;
+}
+
+Point3D &Point3D::operator/=(const Point3D &point)
+{
+    x / point.x;
+    y / point.y;
+    z / point.z;
+    return *this;
+}
+
 
 /***Point with Vector operation***/
 
-Point3D Point3D::operator+(const Vector3D &vector) const
+Point3D &Point3D::operator+(const Vector3D &vector) const
 {
     Point3D new_point(x + vector.x, y + vector.y, z + vector.z);
     return new_point;
 }
 
-void Point3D::operator+=(const Vector3D &vector)
+Point3D &Point3D::operator+=(const Vector3D &vector)
 {
-    x += vector.x;
-    y += vector.y;
-    z += vector.z;
+    x + vector.x;
+    y + vector.y;
+    z + vector.z;
+    return *this;
 }
 
-Point3D Point3D::operator-(const Vector3D &vector) const
+Point3D &Point3D::operator-(const Vector3D &vector) const
 {
     Point3D new_point(x - vector.x, y - vector.y, z - vector.z);
     return new_point;
 }
 
-void Point3D::operator-=(const Vector3D &vector)
+Point3D &Point3D::operator-=(const Vector3D &vector)
 {
-    x -= vector.x;
-    y -= vector.y;
-    z -= vector.z;
+    x - vector.x;
+    y - vector.y;
+    z - vector.z;
+    return *this;
 }
 
-/***Point with double operation***/
-
-Point3D Point3D::operator+(const double &value) const
+Point3D &Point3D::operator*(const Vector3D &vector) const
 {
-    Point3D new_point(x + value, y + value, z + value);
+    Point3D new_point(x * vector.x, y * vector.y, z * vector.z);
     return new_point;
 }
 
-void Point3D::operator+=(const double &value)
+Point3D &Point3D::operator*=(const Vector3D &vector)
 {
-    x += value;
-    y += value;
-    z += value;
+    x * vector.x;
+    y * vector.y;
+    z * vector.z;
+    return *this;
 }
 
-Point3D Point3D::operator-(const double &value) const
+Point3D &Point3D::operator/(const Vector3D &vector) const
 {
-    Point3D new_point(x - value, y - value, z - value);
+    Point3D new_point(x / vector.x, y / vector.y, z / vector.z);
     return new_point;
 }
 
-void Point3D::operator-=(const double &value)
+Point3D &Point3D::operator/=(const Vector3D &vector)
 {
-    x -= value;
-    y -= value;
-    z -= value;
+    x / vector.x;
+    y / vector.y;
+    z / vector.z;
+    return *this;
 }
-
-Point3D Point3D::operator*(const double &value) const
-{
-    Point3D new_point(x * value, y * value, z * value);
-    return new_point;
-}
-
-void Point3D::operator*=(const double &value)
-{
-    x *= value;
-    y *= value;
-    z *= value;
-}
-
-void Point3D::rotate(const Vector3D &, const double &)
-{
-    //TODO
-}
-
-Point3D Point3D::operator/(const double &value) const
-{
-    Point3D new_point(x / value, y / value, z / value);
-    return new_point;
-}
-
-void Point3D::operator/=(const double &value)
-{
-    x /= value;
-    y /= value;
-    z /= value;
-}
-}
+} // namespace math
