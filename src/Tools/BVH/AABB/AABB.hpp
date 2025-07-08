@@ -27,8 +27,8 @@ public:
     static AABB surroundingBox(const AABB& box0, const AABB& box1);
 
     bool intersect(const Ray &ray,
-        float tMin = 0.001f,
-        float tMax = std::numeric_limits<float>::infinity()) const;
+        double tMin = 0.001f,
+        double tMax = std::numeric_limits<double>::infinity()) const;
 
     const math::Vector3D &min() const {return _min;};
     const math::Vector3D &max() const {return _max;};

@@ -37,7 +37,7 @@ std::shared_ptr<BVHNode> BVHNode::buildBVH(std::vector<std::shared_ptr<Primitive
     return std::make_shared<BVHNode>(box, nullptr, left, right);
 }
 
-bool BVHNode::hit(const Ray &ray, HitRecord &record, float tMin, float tMax) const
+bool BVHNode::hit(const Ray &ray, HitRecord &record, const double tMin, double tMax) const
 {
     if (!_box.intersect(ray, tMin, tMax)) {
         return false;
@@ -63,9 +63,9 @@ bool BVHNode::hit(const Ray &ray, HitRecord &record, float tMin, float tMax) con
                 hitAnything = true;
             }
         }
-        if (_left) {
+        if (_right) {
             HitRecord rightRecord;
-            if (_left->hit(ray, rightRecord, tMin, closest)) {
+            if (_right->hit(ray, rightRecord, tMin, closest)) {
                 record = rightRecord;
                 closest = record.getDistance();
                 hitAnything = true;

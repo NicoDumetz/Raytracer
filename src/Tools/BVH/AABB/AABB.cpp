@@ -9,20 +9,28 @@
 
 namespace Utils
 {
-bool AABB::intersect(const Ray &ray, float tMin, float tMax) const
+bool AABB::intersect(const Ray &ray, double tMin, double tMax) const
 {
-    double t0;
-    double t1;
-    float invD;
-
     for (int i = 0; i < 3; i++) {
-        invD = 1.0f / ray.D[i];
-        t0 = (_min[i] - ray.O[i] * invD);
-        t1 = (_max[i] - ray.O[i] * invD);
-        if (invD < 0.0f) std::swap(t0, t1);
-        tMin = (t0 > tMin) ? t0 : tMin;
-        tMax = (t1 < tMax) ? t1 : tMax;
-        if (tMax <= tMin) return false;
+        double origin = ray.O[i];
+        double direction = ray.D[i];
+
+        if (direction == 0.0) {
+            if (origin < _min[i] || origin > _max[i])
+                return false;
+        } else {
+            double invD = 1.0 / direction;
+            double t0 = (_min[i] - origin) * invD;
+            double t1 = (_max[i] - origin) * invD;
+
+            if (invD < 0.0) std::swap(t0, t1);
+
+            tMin = (t0 > tMin) ? t0 : tMin;
+            tMax = (t1 < tMax) ? t1 : tMax;
+
+            if (tMax < tMin)
+                return false;
+        }
     }
     return true;
 }

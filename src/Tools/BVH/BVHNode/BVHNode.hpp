@@ -26,7 +26,7 @@ public:
 
     static std::shared_ptr<BVHNode> buildBVH(std::vector<std::shared_ptr<Primitive::IPrimitive>> &primitives, int start, int end);
 
-    bool hit(const Ray &ray, HitRecord &record, float tMin, float tMax) const;
+    bool hit(const Ray &ray, HitRecord &record, const double tMin, double tMax) const;
 
     const AABB &box() const {return _box;};
     const BVHNode &left() const {return *_left;};
