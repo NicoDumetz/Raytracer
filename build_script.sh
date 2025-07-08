@@ -2,6 +2,9 @@
 
 BUILD_DIR="build"
 
+export CC=gcc-13
+export CXX=g++-13
+
 mkdir -p $BUILD_DIR
 
 echo "Configuring the project..."

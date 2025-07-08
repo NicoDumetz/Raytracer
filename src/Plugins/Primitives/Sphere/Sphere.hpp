@@ -31,15 +31,8 @@ namespace Primitive
                 Utils::HitRecord &record,
                 double t,
                 const Utils::Ray &ray) const;
-            const Utils::AABB &getBoundingBox() const {return _box;};
+
         private:
             double _radius;
-            Utils::AABB _box;
-
-            Utils::AABB calculateBox() const {
-                math::Vector3D min(_position.x - _radius, _position.y - _radius, _position.z - _radius);
-                math::Vector3D max(_position.x + _radius, _position.y + _radius, _position.z + _radius);
-                return Utils::AABB(min, max);
-            }
     };
 } // namespace RayTracer
