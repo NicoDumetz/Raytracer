@@ -12,7 +12,7 @@ namespace math
 Vector3D::Vector3D(double x = 0, double y = 0, double z = 0)
 : x(x), y(y), z(z) {}
 
-double Vector3D::length() const {return std::sqrt(x * x + y * y + z * z);}
+double Vector3D::length() const {return std::sqrt(std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2));};
 
 double Vector3D::dot(Vector3D &other) const {return x * other.x + y * other.y + z * other.z;};
 
