@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2025
-** FlatColor.hpp
+** Glass.hpp
 ** File description:
 ** raytracer
 */
@@ -12,13 +12,14 @@
 
 namespace Material {
 
-    class FlatColor : public IMaterial {
+    class Glass : public IMaterial{
     private:
         Utils::Color _color;
+        float _ior;
     public:
-        FlatColor(Utils::Color color =  Utils::Color()) : _color(color) {};
-        ~FlatColor() = default;
-        const Utils::Color& shade(
+        Glass( Utils::Color color =  Utils::Color(), float ior = 0) : _color(color), _ior(ior) {};
+        ~Glass() = default;
+        const Utils::Color &shade(
             const Utils::HitRecord &,
             const Utils::Ray &,
             IMaterial::MaterialProperties& props) const;

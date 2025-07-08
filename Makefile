@@ -13,6 +13,7 @@ SRC =	main.cpp \
 		src/Plugins/Primitives/Cylinder/Cylinder.cpp \
 		src/Plugins/Renders/SFML/SFMLRenderer.cpp \
 		src/Plugins/Material/FlatColor/FlatColor.cpp \
+		src/Plugins/Material/Glass/Glass.cpp \
 		src/Plugins/Light/AmbientLight/AmbientLight.cpp \
 		src/Plugins/Light/DirectionnalLight/DirectionnalLight.cpp \
 		src/RayTracer/Scene/Scene.cpp \

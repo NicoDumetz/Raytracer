@@ -45,7 +45,7 @@ namespace Utils
             const Color& getColor() const { return color; }
             void setColor(const Color& col) { color = col; }
 
-            const Material::IMaterial& getMaterial() const { return *_material; }
+            Material::IMaterial& getMaterial() { return *_material; }
             void setMaterial(std::shared_ptr<Material::IMaterial> material) {_material = std::move(material);};
         };
 } // namespace Utils
