@@ -28,5 +28,7 @@ public:
 
     void operator+=(const Vector3D &vec);
     void operator-=(const Vector3D &vec);
+
+    double operator[](int axe) const;
 };
 }
