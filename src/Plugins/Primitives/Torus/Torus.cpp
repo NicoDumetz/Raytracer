@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2025
+** B-OOP-400-LIL-4-1-raytracer-maximilien.dheripre
+** File description:
+** Torus
+*/
+
 #include "Torus.hpp"
 #include <cmath>
 #include <limits>
