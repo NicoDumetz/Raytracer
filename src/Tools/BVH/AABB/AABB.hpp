@@ -24,11 +24,11 @@ public:
     AABB(const math::Vector3D &a, const math::Vector3D &b) : _min(a), _max(b) {};
     ~AABB() = default;
 
+    static AABB surroundingBox(const AABB& box0, const AABB& box1);
+
     bool intersect(const Ray &ray,
         float tMin = 0.001f,
         float tMax = std::numeric_limits<float>::infinity()) const;
-
-    AABB surroundingBox(const AABB& box0, const AABB& box1);
 
     const math::Vector3D &min() const {return _min;};
     const math::Vector3D &max() const {return _max;};
@@ -36,7 +36,4 @@ private:
     math::Vector3D _min;
     math::Vector3D _max;
 };
-
-
-
 } // namespace Utils

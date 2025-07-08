@@ -9,9 +9,7 @@
 
 namespace Utils
 {
-bool AABB::intersect(const Ray &ray,
-    float tMin = 0.001f,
-    float tMax = std::numeric_limits<float>::infinity()) const
+bool AABB::intersect(const Ray &ray, float tMin, float tMax) const
 {
     double t0;
     double t1;
