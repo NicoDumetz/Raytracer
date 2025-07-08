@@ -8,28 +8,27 @@
 #include "DirectionnalLight.hpp"
 #include <iostream>
 
-Utils::Color Light::DirectionalLight::illuminate(
-    const Utils::HitRecord& hit,
-    const RayTracer::Scene& scene
-) const {
-    math::Point3D  P = hit.getPosition();
-    math::Vector3D N = hit.getNormal().normalized();
-    math::Vector3D L = -_direction.normalized();
+Utils::Color Light::DirectionalLight::illuminate(const Utils::HitRecord& hit, const RayTracer::Scene& scene) const {
+    math::Point3D point = hit.getPosition();
+    math::Vector3D normal = hit.getNormal();
+    math::Vector3D lightDir = - _direction.normalized();
 
-    const double eps = 1e-4;
-    Utils::Ray shadowRay(P + L * eps, L);
-    Utils::HitRecord tmp;
-    if (scene.trace(shadowRay, tmp)) {
-        return Utils::Color(0,0,0,1.0f);
-    }
-    float dotNL = std::max(0.0f, static_cast<float>(N.dot(L)));
+    const double epsilon = 1e-4;
+    math::Point3D shadowOrigin = point + lightDir * epsilon;
+    Utils::Ray shadowRay(shadowOrigin, lightDir);
+    Utils::HitRecord shadowHit;
 
-    return Utils::Color(
-        _intensity.r * dotNL,
-        _intensity.g * dotNL,
-        _intensity.b * dotNL,
-        1.0f
-    );
+    if (scene.trace(shadowRay, shadowHit))
+        return Utils::Color(0, 0, 0, 1.0f);
+    float dot = std::max(static_cast<double>(0.0f), normal.dot(lightDir));
+        
+        return Utils::Color(
+            _intensity.r * dot,
+            _intensity.g * dot,
+            _intensity.b * dot,
+            1.0f
+        );
+        
 }
 
 Light::DirectionalLight::DirectionalLight(const Utils::ConfigNode& node)

@@ -7,14 +7,15 @@
 
 #include "FlatColor.hpp"
 
-namespace Material
-{
-    const Utils::Color& Material::FlatColor::shade(
-        const Utils::HitRecord &,
-        const Utils::Ray &,
-        IMaterial::MaterialProperties&) const
-    {
-        return _color;
-    }
-} // namespace Material
+const Utils::Color& Material::FlatColor::shade(
+    const Utils::HitRecord&,
+    const Utils::Ray&,
+    const RayTracer::Scene&
+) const {
+    return _color;
+}
 
+Material::FlatColor::FlatColor(const Utils::ConfigNode& node)
+    : _color(node.parseColor("color"))
+{
+}

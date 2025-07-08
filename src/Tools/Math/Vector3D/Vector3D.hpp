@@ -33,8 +33,6 @@ public:
     Vector3D operator-(const Vector3D& other) const;
     void operator-=(const Vector3D& other);
     Vector3D operator-() const;
-    Vector3D operator*(const Vector3D& other) const;
-    void operator*=(const Vector3D& other);
 
     Vector3D operator*(double scalar) const;
     void operator*=(double scalar);

@@ -13,6 +13,8 @@
 #include "Tools/HitRecord/HitRecord.hpp"
 #include "Plugins/Primitives/APrimitives.hpp"
 #include "Tools/ConfigNode/ConfigNode.hpp"
+#include "Shared/LibraryType.hpp"
+#include "Factory/Factory.hpp"
 
 namespace Primitive
 {
@@ -26,6 +28,8 @@ namespace Primitive
         ~Plane() = default;
 
         bool hit(const Utils::Ray &ray, Utils::HitRecord &record) const override;
+        void applyTransform(const math::TransformMatrix &transform) override;
+
     private:
         math::Vector3D _normal;
     };

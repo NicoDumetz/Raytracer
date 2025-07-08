@@ -64,20 +64,6 @@ Vector3D Vector3D::operator-() const {
     return Vector3D(-x, -y, -z);
 }
 
-Vector3D Vector3D::operator*(const Vector3D &other) const {
-    return Vector3D(
-        x * other.x,
-        y * other.y,
-        z * other.z
-    );
-}
-
-void Vector3D::operator*=(const Vector3D& other) {
-    x *= other.x;
-    y *= other.y;
-    z *= other.z;
-}
-
 Vector3D Vector3D::operator*(double value) const {
     return Vector3D(x * value, y * value, z * value);
 }

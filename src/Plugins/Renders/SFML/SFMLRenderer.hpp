@@ -27,7 +27,7 @@ namespace Renderer
 
             void clean();
             void drawPixelArray(
-                const std::vector<std::vector<Utils::Color>> &pixelsArray);
+                const std::vector<std::vector<Utils::HitRecord>> &pixelsArray);
             void display();
             void saveImage(std::string path) const;
         private:

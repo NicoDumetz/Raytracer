@@ -48,10 +48,10 @@ void Renderer::SFMLRenderer::clean()
     );    
 }
 
-void Renderer::SFMLRenderer::drawPixelArray(const std::vector<std::vector<Utils::Color>> &pixelArray)
+void Renderer::SFMLRenderer::drawPixelArray(const std::vector<std::vector<Utils::HitRecord>> &hitRecords)
 {
-    unsigned int imgWidth = pixelArray[0].size();
-    unsigned int imgHeight = pixelArray.size();
+    unsigned int imgWidth = hitRecords[0].size();
+    unsigned int imgHeight = hitRecords.size();
     sf::Vector2u winSize = _window.getSize();
     sf::Vector2f scale(static_cast<float>(winSize.x) / imgWidth,
         static_cast<float>(winSize.y) / imgHeight);
@@ -59,7 +59,7 @@ void Renderer::SFMLRenderer::drawPixelArray(const std::vector<std::vector<Utils:
     _image.create(imgWidth, imgHeight);
     for (unsigned int y = 0; y < imgHeight; ++y) {
         for (unsigned int x = 0; x < imgWidth; ++x) {
-            const auto& c = pixelArray[y][x];
+            const auto& c = hitRecords[y][x].getColor();
             _image.setPixel(x, y, sf::Color(
                 static_cast<sf::Uint8>(c.r * 255),
                 static_cast<sf::Uint8>(c.g * 255),

@@ -43,7 +43,7 @@ namespace RayTracer
             AntialiasingType antialiasingType = AntialiasingType::NONE,
             int antialiasingSamples = 1);
 
-        bool trace(const Utils::Ray& ray, Utils::HitRecord& record) const;
+        bool trace(Utils::Ray& ray, Utils::HitRecord& record) const;
 
         bool hasCamera() const;
         const Cam::ICamera& getCamera() const;

@@ -23,45 +23,7 @@ namespace Utils
         float g;
         float b;
         float a;
-
-        Color& operator+=(const Color& o) {
-            r += o.r;
-            g += o.g;
-            b += o.b;
-            a += o.a;
-            return *this;
-        }
-        Color operator+(const Color& o) {
-            Color c;
-        
-            c.r = r + o.r;
-            c.g = g + o.g;
-            c.b = b + o.b;
-            c.a = a + o.a;
-            return c;
-        }
     };
-    inline Color operator*(const Color& color, float scalar) {
-        return Color(
-            color.r * scalar,
-            color.g * scalar,
-            color.b * scalar,
-            color.a // alpha remains unchanged
-        );
-    }
-    inline Color operator*(float scalar, const Color& color) {
-        return color * scalar;
-    }
-    inline Color operator/(const Color& color, float scalar) {
-        if (scalar == 0.0f)
-            throw std::runtime_error("Division by zero in Color operator/");
-        return Color(
-            color.r / scalar,
-            color.g / scalar,
-            color.b / scalar,
-            color.a // alpha is not divided to preserve transparency
-        );
-    }
     inline std::ostream& operator<<(std::ostream& os, const Color& color) {
         os << "Color(r=" << color.r
            << ", g=" << color.g

@@ -122,7 +122,7 @@ Utils::ConfigNode RayTracer::SceneParser::parsePrimitive(const libconfig::Settin
 
     for (const auto& [fieldName, handler] : _primitiveFieldHandlers) {
         if (prim.exists(fieldName))
-            handler(node, prim[fieldName.c_str()]);
+            handler(node, prim[fieldName]);
     }
 
     return node;
@@ -134,8 +134,8 @@ Utils::ConfigNode RayTracer::SceneParser::parseLight(const libconfig::Setting& l
     Utils::ConfigNode node(Utils::ConfigNode::ConfigType::LIGHT, type);
 
     for (const auto& [fieldName, handler] : _lightFieldHandlers) {
-        if (light.exists(fieldName.c_str()))
-            handler(node, light[fieldName.c_str()]);
+        if (light.exists(fieldName))
+            handler(node, light[fieldName]);
     }
 
     return node;

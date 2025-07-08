@@ -10,18 +10,14 @@
 #include "Tools/Ray/Ray.hpp"
 #include "Tools/HitRecord/HitRecord.hpp"
 #include "Tools/Color/Color.hpp"
+#include "RayTracer/Scene/Scene.hpp"
 
 namespace Material {
     class IMaterial {
     public:
-    struct MaterialProperties {
-        float   reflectivity    = 0.0f;
-        float   transparency    = 0.0f;
-        float   refractiveIndex = 1.0f;
-    };
         virtual ~IMaterial() = default;
-        virtual const Utils::Color &shade(const Utils::HitRecord& rec,
-            const Utils::Ray& ray,
-            MaterialProperties& props) const = 0;
+        virtual const Utils::Color& shade(const Utils::HitRecord& record,
+                            const Utils::Ray& ray,
+                            const RayTracer::Scene& scene) const = 0;
     };
 } // namespace RayTracer

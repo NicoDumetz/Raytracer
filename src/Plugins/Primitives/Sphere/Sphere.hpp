@@ -25,6 +25,7 @@ namespace Primitive
 
             ~Sphere() = default;
             bool hit(const Utils::Ray &, Utils::HitRecord &) const;
+            void applyTransform(const math::TransformMatrix& transform);
 
         private:
             double _radius;

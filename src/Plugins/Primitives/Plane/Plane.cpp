@@ -7,46 +7,66 @@
 
 #include "Plane.hpp"
 
-namespace Primitive {
+namespace Primitive
+{
 
-    Plane::Plane(std::shared_ptr<Material::IMaterial> material,
-                 math::Point3D point,
-                 math::Vector3D normal)
-        : APrimitive(std::move(material), point), _normal(normal.normalized())
-    {}
-    
-    Plane::Plane(const Utils::ConfigNode& node)
-        : APrimitive(node.getMaterial(),node.parsePoint3D("point"))
+Plane::Plane(std::shared_ptr<Material::IMaterial> material,
+             math::Point3D point,
+             math::Vector3D normal)
+    : APrimitive(std::move(material), point), _normal(normal.normalized()) {}
+
+Plane::Plane(const Utils::ConfigNode& node)
+    : APrimitive(node.getMaterial(), node.parsePoint3D("point"))
+{
+    _normal = node.parseVector3("normal").normalized();
+}
+
+bool Plane::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
+{
+    const double epsilon = 1e-6;
+    double denom = _normal.dot(ray.getDirection());
+    if (std::abs(denom) < epsilon)
+        return false;
+
+    double t = (_position - ray.getOrigin()).dot(_normal) / denom;
+    if (t < epsilon)
+        return false;
+
+    math::Point3D hitPos = ray.getOrigin() + ray.getDirection() * t;
+    math::Vector3D normal = _normal;
+
+    record.setDistance(t);
+    record.setPosition(hitPos);
+    record.setNormal(normal);
+    record.setMaterial(_material);
+    return true;
+}
+
+void Plane::applyTransform(const math::TransformMatrix &transform)
+{
+    _position = transform.transform(_position);
+    _normal = transform.rotateVector(_normal).normalized();
+}
+
+} // namespace Primitive
+
+extern "C" {
+
+    void registerPlugin(RayTracer::Factory<Primitive::IPrimitive>& factory)
     {
-        _normal = node.parseVector3("normal").normalized();
+        factory.addCreator("plane", [](const Utils::ConfigNode& node) {
+            return std::make_unique<Primitive::Plane>(node);
+        });
     }
-    
-    bool Plane::hit(const Utils::Ray &ray, Utils::HitRecord &record) const
+
+    RayTracer::Ltype type()
     {
-        /* std::cout << "Passe dans hit" << std::endl;
-        std::cout << "Transform" << std::endl << _transform << std::endl;
-        std::cout << "Inverse" << std::endl <<_inverseTransform << std::endl; */
-        const double epsilon = 1e-6;
-    
-        Utils::Ray localRay = _inverseTransform.transform(ray);
-        double denom = _normal.dot(localRay.getDirection());
-        if (denom >= 0.0 || std::abs(denom) < epsilon)
-            return false;
-    
-        double t = (_position - localRay.getOrigin()).dot(_normal) / denom;
-        if (t < epsilon)
-            return false;
-    
-        math::Point3D localHit = localRay.at(t);
-        math::Point3D worldHit = _transform.transform(localHit);
-        math::Vector3D worldNormal = _transform.rotateVector(_normal).normalized();
-    
-        record.setDistance((worldHit - ray.getOrigin()).length());
-        record.setPosition(worldHit);
-        record.setNormal(worldNormal);
-        record.setMaterial(_material);
-        return true;
+        return RayTracer::Ltype::PRIMITIVE;
     }
-    
-    } // namespace Primitive
-    
+
+    const char* name()
+    {
+        return "plane";
+    }
+
+}
