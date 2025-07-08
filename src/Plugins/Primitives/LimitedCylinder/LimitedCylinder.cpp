@@ -88,7 +88,7 @@ bool LimitedCylinder::hit(const Utils::Ray& ray, Utils::HitRecord& record) const
     math::Point3D worldHit = _transform.transform(localHit);
     math::Vector3D localNormal;
     if (t == tSide)
-        localNormal = math::Vector3D(localHit.x, 0, localHit.z).normalized();
+        localNormal = math::Vector3D(localHit.x - _position.x, 0, localHit.z - _position.z).normalized();
     else if (t == tCapBottom)
         localNormal = math::Vector3D(0, -1, 0);
     else

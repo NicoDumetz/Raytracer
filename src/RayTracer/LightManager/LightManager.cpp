@@ -51,7 +51,7 @@ Utils::Color LightManager::traceRay(
     const Scene&      scene,
     int               depth
 ) const {
-    constexpr int   MAX_DEPTH = 4;
+    constexpr int   MAX_DEPTH = 16;
     constexpr float EPS       = 1e-4f;
 
     if (depth > MAX_DEPTH)
@@ -96,7 +96,7 @@ Utils::Color LightManager::traceRay(
     if (props.transparency > 0.0f) {
         if (auto T = refract(D, N, props.refractiveIndex)) {
             Utils::Ray refrRay(rec.getPosition() + *T * EPS, *T);
-            refrColor = traceRay(refrRay, scene, depth)
+            refrColor = traceRay(refrRay, scene, depth+1)
           * props.transparency
           * albedo;
 
