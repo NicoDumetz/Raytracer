@@ -71,6 +71,9 @@ namespace RayTracer
         std::vector<std::shared_ptr<Light::ILight>> _lights;
         std::unordered_map<std::string, std::shared_ptr<Material::IMaterial>> _materials;
         std::unique_ptr<Cam::ICamera> _camera;
+        Utils::Color _backgroundColor;
+        AntialiasingType _antialiasingType;
+        int _antialiasingSamples;
 
         const std::unordered_map<Utils::ConfigNode::ConfigType, std::function<void(const Utils::ConfigNode&)>> _handlers = {
             {Utils::ConfigNode::ConfigType::MATERIAL, [this](const Utils::ConfigNode& node) {
