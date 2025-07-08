@@ -13,7 +13,8 @@
 #include "Tools/Ray/Ray.hpp"
 #include "Interface/ICamera.hpp"
 #include "Tools/ConfigNode/ConfigNode.hpp"
-
+#include "Shared/LibraryType.hpp"
+#include "Factory/Factory.hpp"
 
 namespace Cam
 {

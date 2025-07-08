@@ -21,14 +21,14 @@ public:
     ~LibraryObject() {if (_handle) dlclose(_handle);};
 
     template<typename T>
-    std::unique_ptr<T> get(const std::string& symbol)
+    T get(const std::string& symbol)
     {
         if (!_loaded)
-            return nullptr;
+            throw std::runtime_error("Library not loaded");
         void* sym = dlsym(_handle, symbol.c_str());
         if (!sym)
             throw std::runtime_error(dlerror());
-        return std::unique_ptr<T>(reinterpret_cast<T*>(sym));
+        return reinterpret_cast<T>(sym);
     }
 
     bool isLoaded() {return _loaded;};

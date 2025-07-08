@@ -22,6 +22,13 @@ RayTracer::Core::Core(const std::string& filename, char** env)
         if (it != _registry.end())
             it->second(*lib);
     }
+    _sceneBuilder = std::make_unique<SceneBuilder>(
+        _primitiveFactory,
+        _lightFactory,
+        _materialFactory,
+        _cameraFactory,
+        _parser->getNodes()
+    );
 }
 
 void RayTracer::Core::checkEnvDisplay(char **env)

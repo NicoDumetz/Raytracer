@@ -12,6 +12,8 @@
 #include "Tools/Color/Color.hpp"
 #include "Interface/IMaterial.hpp"
 #include "Tools/ConfigNode/ConfigNode.hpp"
+#include "Shared/LibraryType.hpp"
+#include "Factory/Factory.hpp"
 
 
 namespace Material {

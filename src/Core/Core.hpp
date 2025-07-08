@@ -27,7 +27,7 @@ namespace RayTracer
         ~Core() = default;
 
         void checkEnvDisplay(char** env);
-        const Scene& getScene() const;
+        const Scene& getScene() const { return _sceneBuilder->getScene();};
 
     private:
         LibLoader _libLoader;
@@ -42,11 +42,10 @@ namespace RayTracer
         template<typename T>
         void registerFactory(LibraryObject& lib, std::shared_ptr<Factory<T>>& factory)
         {
-            using RegFn = void(*)(Factory<T>&);
-            auto reg = lib.get<RegFn>("registerPlugin");
+            auto reg = lib.get<void(*)(Factory<T>&)>("registerPlugin");
             if (!reg)
-                throw std::runtime_error("Missing symbol 'registerPlugin' in plugin.");
-            (*reg)(*factory);
+                throw std::runtime_error("Missing symbol 'registerPlugin'");
+            reg(*factory);
         }
 
         const std::unordered_map<RayTracer::Ltype, std::function<void(LibraryObject&)>> _registry = {

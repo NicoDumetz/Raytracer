@@ -4,12 +4,13 @@
 ** File description:
 ** sceneBuilder
 */
-
 #pragma once
 
 #include <memory>
 #include <iostream>
 #include <vector>
+#include <unordered_map>
+#include <functional>
 #include "Tools/ConfigNode/ConfigNode.hpp"
 #include "RayTracer/Parser/Parser.hpp"
 #include "RayTracer/Scene/Scene.hpp"
@@ -18,7 +19,6 @@
 #include "Interface/ILight.hpp"
 #include "Interface/IMaterial.hpp"
 #include "Interface/ICamera.hpp"
-
 
 namespace RayTracer
 {
@@ -32,24 +32,33 @@ namespace RayTracer
             const std::vector<Utils::ConfigNode>& nodes
         );
 
-        const Scene& getScene() const {return this->_scene;}
+        const Scene& getScene() const { return _scene; }
 
     private:
         void buildScene();
-
-        template<typename T>
-        void handleGenericVector(const Utils::ConfigNode& node, const std::shared_ptr<Factory<T>>& factory, std::vector<std::shared_ptr<T>>& output);
-
-        template<typename T>
-        void handleGenericUnique(const Utils::ConfigNode& node, const std::shared_ptr<Factory<T>>& factory, std::unique_ptr<T>& output);
-
         void handleMaterial(const Utils::ConfigNode& node);
         void handleGlobalSettings(const Utils::ConfigNode& node);
         void handlePrimitive(const Utils::ConfigNode& node);
         AntialiasingType parseAntialiasingType(const std::string& str);
 
+        template<typename T>
+        void handleGenericUnique(const Utils::ConfigNode& node, const std::shared_ptr<Factory<T>>& factory, std::unique_ptr<T>& output)
+        {
+            Utils::ConfigNode copy = node;
+            if (!copy.has("type"))
+                copy.setField("type", copy.getName());
+            output = factory->create(copy);
+        }
 
-    private:
+        template<typename T>
+        void handleGenericVector(const Utils::ConfigNode& node, const std::shared_ptr<Factory<T>>& factory, std::vector<std::shared_ptr<T>>& output)
+        {
+            Utils::ConfigNode copy = node;
+            if (!copy.has("type"))
+                copy.setField("type", copy.getName());
+            output.push_back(factory->create(copy));
+        }
+
         std::shared_ptr<Factory<Primitive::IPrimitive>> _primitiveFactory;
         std::shared_ptr<Factory<Light::ILight>> _lightFactory;
         std::shared_ptr<Factory<Material::IMaterial>> _materialFactory;
@@ -57,22 +66,23 @@ namespace RayTracer
 
         std::vector<Utils::ConfigNode> _nodes;
         RayTracer::Scene _scene;
+
         std::vector<std::shared_ptr<Primitive::IPrimitive>> _primitives;
         std::vector<std::shared_ptr<Light::ILight>> _lights;
         std::unordered_map<std::string, std::shared_ptr<Material::IMaterial>> _materials;
         std::unique_ptr<Cam::ICamera> _camera;
 
         const std::unordered_map<Utils::ConfigNode::ConfigType, std::function<void(const Utils::ConfigNode&)>> _handlers = {
-            {Utils::ConfigNode::ConfigType::MATERIAL, [this](const Utils::ConfigNode& node)
-                {this->handleMaterial(node);}},
-                {Utils::ConfigNode::ConfigType::PRIMITIVE, [this](const Utils::ConfigNode& node)
-                    {this->handlePrimitive(node);}},
-            {Utils::ConfigNode::ConfigType::LIGHT, [this](const Utils::ConfigNode& node)
-                {this->handleGenericVector(node, _lightFactory, _lights);}},
-            {Utils::ConfigNode::ConfigType::CAMERA, [this](const Utils::ConfigNode& node)
-                {this->handleGenericUnique(node, _cameraFactory, _camera);}},
-            {Utils::ConfigNode::ConfigType::GLOBAL, [this](const Utils::ConfigNode& node)
-                {this->handleGlobalSettings(node);}}
+            {Utils::ConfigNode::ConfigType::MATERIAL, [this](const Utils::ConfigNode& node) {
+                handleMaterial(node); }},
+            {Utils::ConfigNode::ConfigType::PRIMITIVE, [this](const Utils::ConfigNode& node) {
+                handlePrimitive(node); }},
+            {Utils::ConfigNode::ConfigType::LIGHT, [this](const Utils::ConfigNode& node) {
+                handleGenericVector(node, _lightFactory, _lights); }},
+            {Utils::ConfigNode::ConfigType::CAMERA, [this](const Utils::ConfigNode& node) {
+                handleGenericUnique(node, _cameraFactory, _camera); }},
+            {Utils::ConfigNode::ConfigType::GLOBAL, [this](const Utils::ConfigNode& node) {
+                handleGlobalSettings(node); }}
         };
 
         const std::unordered_map<std::string, AntialiasingType> _antialiasingTypeMap = {

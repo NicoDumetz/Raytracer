@@ -15,3 +15,23 @@ Light::AmbientLight::AmbientLight(const Utils::ConfigNode& node)
     : _intensity(node.parseColor("color"))
 {
 }
+
+extern "C" {
+
+    void registerPlugin(RayTracer::Factory<Light::ILight>& factory)
+    {
+        factory.addCreator("ambient", [](const Utils::ConfigNode& node) {
+            return std::make_unique<Light::AmbientLight>(node);
+        });
+    }
+
+    RayTracer::Ltype type()
+    {
+        return RayTracer::Ltype::LIGHT;
+    }
+
+    const char* name()
+    {
+        return "ambient";
+    }
+}

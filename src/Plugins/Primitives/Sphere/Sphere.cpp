@@ -15,7 +15,7 @@ Sphere::Sphere(std::shared_ptr<Material::IMaterial> material,
 : APrimitive(std::move(material), center), _radius(radius) {}
 
 Sphere::Sphere(const Utils::ConfigNode& node)
-    : APrimitive(node.getMaterial(), node.parsePoint3D("point"))
+    : APrimitive(node.getMaterial(), node.parsePoint3D("center"))
 {
     if (!node.has("radius"))
         throw std::runtime_error("[Sphere] Missing 'radius' in config node.");
@@ -62,3 +62,24 @@ void Sphere::applyTransform(const math::TransformMatrix &transform)
     _radius = scaled.length();
 }
 } // namespace RayTracer
+
+extern "C" {
+
+    void registerPlugin(RayTracer::Factory<Primitive::IPrimitive>& factory)
+    {
+        factory.addCreator("sphere", [](const Utils::ConfigNode& node) {
+            return std::make_unique<Primitive::Sphere>(node);
+        });
+    }
+
+    RayTracer::Ltype type()
+    {
+        return RayTracer::Ltype::PRIMITIVE;
+    }
+
+    const char* name()
+    {
+        return "plane";
+    }
+
+}
