@@ -10,15 +10,15 @@
 #include "Tools/Math/Matrix/Matrix.hpp"
 #include "Tools/Math/Point3D/Point3D.hpp"
 #include "Tools/Math/Vector3D/Vector3D.hpp"
-#include "Tools/Ray/Ray.hpp"
+#include "RayTracer/Ray/Ray.hpp"
 #include <cmath>
 
 namespace math
 {
-    class TransformMatrix : public Matrix<4, 4> {
+    class Matrix4x4 : public Matrix<4, 4> {
     public:
-        TransformMatrix() : Matrix<4, 4>() {}
-        TransformMatrix(const Matrix<4, 4>& base) : Matrix<4, 4>(base) {}
+        Matrix4x4() : Matrix<4, 4>() {}
+        Matrix4x4(const Matrix<4, 4>& base) : Matrix<4, 4>(base) {}
         void applyTranslation(const Vector3D& t);
         void applyScaling(const Vector3D& s);
         void applyRotationX(double angle);
@@ -27,8 +27,5 @@ namespace math
         void applyRotation(const Vector3D& axis, double angle);
         Point3D transform(const Point3D& p) const;
         Vector3D transform(const Vector3D& v) const;
-        Utils::Ray transform(const Utils::Ray& ray) const;
-        Vector3D rotateVector(const Vector3D& v) const;
-        TransformMatrix inverse() const;
     };
 } // namespace math

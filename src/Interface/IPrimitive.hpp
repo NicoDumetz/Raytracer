@@ -5,19 +5,23 @@
 ** Project
 */
 
+
 #pragma once
 
-#include "Tools/Ray/Ray.hpp"
-#include "Tools/HitRecord/HitRecord.hpp"
-#include "Tools/Math/Matrix/TransformMatrix.hpp"
+#ifndef IPRIMITIVE_HPP
+#define IPRIMITIVE_HPP
 
-namespace Primitive
+#include <memory>
+#include "RayTracer/Ray/Ray.hpp"
+#include "Tools/HitRecord/HitRecord.hpp"
+
+namespace RayTracer
 {
     class IPrimitive {
     public:
         virtual ~IPrimitive() = default;
-        virtual bool hit(const Utils::Ray& ray,  Utils::HitRecord& record) const = 0;
-        virtual void applyTransform(const math::TransformMatrix &transform) = 0;
+        virtual bool hit(const Ray& ray, HitRecord& record) const = 0;
     };
+    #endif // IPRIMITIVE_HPP
 } // namespace Raytracer
 

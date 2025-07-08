@@ -3,3 +3,7 @@ a.out
 *.log
 *.o
 raytracer
+.vscode
+*.json
+*.so
+build/

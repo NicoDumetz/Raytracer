@@ -10,13 +10,8 @@
 #include "Tools/Color/Color.hpp"
 #include "Tools/Math/Point3D/Point3D.hpp"
 #include "Tools/Math/Vector3D/Vector3D.hpp"
-#include <memory>
 
-namespace Material {
-    class IMaterial;
-}
-
-namespace Utils
+namespace RayTracer
 {
     class HitRecord {
         private:
@@ -24,7 +19,6 @@ namespace Utils
             math::Point3D position;
             math::Vector3D normal;
             Color color;
-            std::shared_ptr<Material::IMaterial> _material;
 
         public:
             HitRecord() = default;
@@ -44,8 +38,5 @@ namespace Utils
 
             const Color& getColor() const { return color; }
             void setColor(const Color& col) { color = col; }
-
-            const Material::IMaterial& getMaterial() const { return *_material; }
-            void setMaterial(std::shared_ptr<Material::IMaterial> material) {_material = std::move(material);};
         };
-} // namespace Utils
+} // namespace RayTracer

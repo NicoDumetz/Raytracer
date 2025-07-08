@@ -5,40 +5,40 @@
 ** main
 */
 
-// Scene.hpp
 #pragma once
 
-#include <memory>
+#pragma once
+
 #include <vector>
-#include "Tools/Math/Matrix/TransformMatrix.hpp"
+#include <memory>
+#include <stdexcept>
 #include "Interface/IPrimitive.hpp"
 #include "Interface/ILight.hpp"
-#include "Interface/ICamera.hpp"
+#include "RayTracer/Camera/Camera.hpp"
+#include "RayTracer/Ray/Ray.hpp"
 #include "Tools/HitRecord/HitRecord.hpp"
-#include "Tools/Ray/Ray.hpp"
-#include <limits>
-#include "Tools/Color/Color.hpp"
 
-namespace RayTracer
-{
-    class Scene {
+namespace RayTracer {
+
+    class Scene : public IPrimitive {
     private:
-        std::vector<std::shared_ptr<Primitive::IPrimitive>> _primitives;
-        std::vector<std::shared_ptr<Light::ILight>> _lights;
-        std::unique_ptr<Cam::ICamera> _camera;
+        std::unique_ptr<Camera> _camera;
+        std::shared_ptr<Scene> _parent;
+        std::vector<std::unique_ptr<IPrimitive>> _primitives;
+        std::vector<std::unique_ptr<ILight>> _lights;
 
     public:
-        Scene(std::vector<std::shared_ptr<Primitive::IPrimitive>> primitives = {},
-              std::vector<std::shared_ptr<Light::ILight>> lights = {},
-              std::unique_ptr<Cam::ICamera> camera = nullptr);
+        Scene(std::vector<std::unique_ptr<IPrimitive>>&& primitives,
+              std::vector<std::unique_ptr<ILight>>&& lights,
+              std::unique_ptr<Camera> camera = nullptr,
+              std::shared_ptr<Scene> parent = nullptr)
+            : _camera(std::move(camera)),
+              _parent(std::move(parent)),
+              _primitives(std::move(primitives)),
+              _lights(std::move(lights)) {}
 
-        bool trace(Utils::Ray& ray, Utils::HitRecord& record) const;
-
-        bool hasCamera() const;
-        const Cam::ICamera& getCamera() const;
-        
-        const std::vector<std::shared_ptr<Primitive::IPrimitive>>& getPrimitives() const;
-        const std::vector<std::shared_ptr<Scene>>& getChildren() const;
-        const std::vector<std::shared_ptr<Light::ILight>>& getLights() const;
+        bool hit(const Ray& ray, HitRecord& record) const;
+        bool hasCamera() const { return _camera != nullptr; }
+        const Camera& getCamera() const;
     };
 }

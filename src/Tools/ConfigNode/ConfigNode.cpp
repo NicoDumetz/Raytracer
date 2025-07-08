@@ -7,12 +7,12 @@
 
 #include "ConfigNode.hpp"
 
-bool Utils::ConfigNode::has(const std::string &key) const
+bool RayTracer::ConfigNode::has(const std::string &key) const
 {
     return _fields.find(key) != _fields.end();
 }
 
-const std::string &Utils::ConfigNode::get(const std::string &key) const
+const std::string &RayTracer::ConfigNode::get(const std::string &key) const
 {
     auto it = _fields.find(key);
     if (it == _fields.end())
