@@ -12,10 +12,10 @@ namespace Primitive
 Sphere::Sphere(std::shared_ptr<Material::IMaterial> material,
     math::Point3D center = math::Point3D(),
     double radius = 0)
-: APrimitive(std::move(material), center), _radius(radius) {}
+: APrimitive(std::move(material), center), _radius(radius), _box(calculateBox()) {}
 
 Sphere::Sphere(const Utils::ConfigNode& node)
-    : APrimitive(node.getMaterial(), node.parsePoint3D("center"))
+    : APrimitive(node.getMaterial(), node.parsePoint3D("center")), _box(calculateBox())
 {
     if (!node.has("radius"))
         throw std::runtime_error("[Sphere] Missing 'radius' in config node.");
