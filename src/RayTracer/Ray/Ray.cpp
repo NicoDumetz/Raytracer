@@ -10,9 +10,9 @@
 namespace RayTracer
 {
 Ray::Ray()
-: O(math::Point3D()), D(math::Vector3D()) {}
+: _origin(math::Point3D()), _direction(math::Vector3D()) {}
 
 Ray::Ray(math::Point3D origin, math::Vector3D direction)
-: O(origin), D(direction) {}
+: _origin(origin), _direction(direction) {}
 
 } // namespace RayTracer

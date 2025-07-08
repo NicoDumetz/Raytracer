@@ -1,8 +1,10 @@
 /*
 ** EPITECH PROJECT, 2025
-** raytracer
+** Projet
 ** File description:
-** main
+** main.cpp
 */
 
-#include "Rectangle.hpp"
+int main() {
+    return 0;
+}
