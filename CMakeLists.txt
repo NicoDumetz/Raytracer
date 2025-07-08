@@ -159,6 +159,7 @@ add_raytracer_plugin(r_m_glass            "Material/Glass"              OFF)
 add_raytracer_plugin(r_m_perlin           "Material/Perlin"             OFF)
 add_raytracer_plugin(r_m_mirror           "Material/Mirror"             OFF)
 add_raytracer_plugin(r_m_transparent      "Material/Transparent"        OFF)
+add_raytracer_plugin(r_m_gradient         "Material/Gradient"           OFF)
 # ╰───────────────────────────────────────────╯
 
 # ╭──────────────── 💡 LIGHTS ───────────────╮
