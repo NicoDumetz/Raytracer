@@ -53,3 +53,25 @@ void RayTracer::Core::checkEnvDisplay(char **env)
     if (!envDisplay)
         throw std::runtime_error("Error: DISPLAY is missing or invalid. Please run in a graphical environment.");
 }
+
+void RayTracer::Core::run()
+{
+    const RayTracer::Scene& scene = _sceneBuilder->getScene();
+    const auto& cam = scene.getCamera();
+    const auto res = cam.getResolution();
+    const Utils::Color& bgColor = scene.getBackgroundColor();
+    std::vector<std::vector<Utils::Color>> pixelArray(res.height, std::vector<Utils::Color>(res.width));
+
+    for (int y = 0; y < res.height; ++y) {
+        for (int x = 0; x < res.width; ++x) {
+            pixelArray[y][x] = lightManager.traceRay(cam.generateRay(x, y), scene, 3);
+        }
+    }
+    _render->openWindow(res.width, res.height, bgColor);
+    while (_render->isOpen()) {
+        while (_render->pollEvent()) {}
+        _render->clean();
+        _render->drawPixelArray(pixelArray);
+        _render->display();
+    }
+}

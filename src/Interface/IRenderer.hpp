@@ -26,7 +26,7 @@ namespace Renderer
 
         virtual void clean() = 0;
         virtual void drawPixelArray(
-            const std::vector<std::vector<Utils::HitRecord>> &pixelsArray) = 0;
+            const std::vector<std::vector<Utils::Color>> &pixelsArray) = 0;
         virtual void display() = 0;
         virtual void saveImage(std::string path) const = 0;
     };

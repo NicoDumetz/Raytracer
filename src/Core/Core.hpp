@@ -8,13 +8,19 @@
 #include "LibLoader/LibLoader.hpp"
 #include "RayTracer/Parser/Parser.hpp"
 #include "RayTracer/Builder/sceneBuilder.hpp"
-#include "Plugins/Primitives/Sphere/Sphere.hpp"
-#include "Plugins/Primitives/Plane/Plane.hpp"
-#include "Plugins/Material/FlatColor/FlatColor.hpp"
-#include "Plugins/Light/AmbientLight/AmbientLight.hpp"
-#include "Plugins/Light/DirectionnalLight/DirectionnalLight.hpp"
-#include "Plugins/Camera/Camera.hpp"
+// #include "Plugins/Primitives/Sphere/Sphere.hpp"
+// #include "Plugins/Primitives/Plane/Plane.hpp"
+// #include "Plugins/Material/FlatColor/FlatColor.hpp"
+// #include "Plugins/Light/AmbientLight/AmbientLight.hpp"
+// #include "Plugins/Light/DirectionnalLight/DirectionnalLight.hpp"
+// #include "Plugins/Camera/Camera.hpp"
+#include "Interface/IPrimitive.hpp"
+#include "Interface/ILight.hpp"
+#include "Interface/IMaterial.hpp"
+#include "Interface/IPrimitive.hpp"
+#include "Interface/IRenderer.hpp"
 #include "Factory/Factory.hpp"
+#include "RayTracer/LightManager/LightManager.hpp"
 #include <regex>
 
 #define PLUGIN_PATH std::string("./plugins/")
@@ -28,6 +34,7 @@ namespace RayTracer
 
         void checkEnvDisplay(char** env);
         const Scene& getScene() const { return _sceneBuilder->getScene();};
+        void run();
 
     private:
         LibLoader _libLoader;
@@ -39,6 +46,9 @@ namespace RayTracer
         std::shared_ptr<Factory<Light::ILight>> _lightFactory;
         std::shared_ptr<Factory<Cam::ICamera>> _cameraFactory;
 
+        std::unique_ptr<Renderer::IRenderer> _render;
+        RayTracer::LightManager lightManager;
+
         template<typename T>
         void registerFactory(LibraryObject& lib, std::shared_ptr<Factory<T>>& factory)
         {
@@ -46,6 +56,18 @@ namespace RayTracer
             if (!reg)
                 throw std::runtime_error("Missing symbol 'registerPlugin'");
             reg(*factory);
+        }
+
+        template <typename T>
+        std::unique_ptr<T> getInstance(LibraryObject &lib) const
+        {
+            auto *func = lib.get<void *(*)()>("entryPoint");
+            if (!func)
+                throw std::runtime_error("Missing symbol 'entryPoint'");
+            auto *instance = reinterpret_cast<T *>(func());
+            if (!instance)
+                throw std::runtime_error("Failed to create instance");
+            return std::unique_ptr<T>(instance);
         }
 
         const std::unordered_map<RayTracer::Ltype, std::function<void(LibraryObject&)>> _registry = {
@@ -60,6 +82,9 @@ namespace RayTracer
             }},
             {RayTracer::Ltype::CAMERA, [this](LibraryObject& lib) {
                 registerFactory(lib, _cameraFactory);
+            }},
+            {RayTracer::Ltype::GRAPHIC, [this](LibraryObject& lib) {
+                this->_render = getInstance<Renderer::IRenderer>(lib);
             }}
         };
     };

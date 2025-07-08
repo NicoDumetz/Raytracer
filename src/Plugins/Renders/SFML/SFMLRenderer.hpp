@@ -7,29 +7,32 @@
 
 #pragma once
 #include "Interface/IRenderer.hpp"
+#include "Tools/ConfigNode/ConfigNode.hpp"
+#include "Shared/LibraryType.hpp"
+#include "Factory/Factory.hpp"
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
 
 namespace Renderer
 {
-    class SFMLRenderer
+    class SFMLRenderer : public Renderer::IRenderer
     {
         public:
             ~SFMLRenderer() = default;
             SFMLRenderer() = default;
             void openWindow(
-                unsigned int width, unsigned int height, const Utils::Color &background = Utils::Color());
-            void closeWindow();
+                unsigned int width, unsigned int height, const Utils::Color &background = Utils::Color()) override;
+            void closeWindow() override;
 
-            bool isOpen() const;
-            bool pollEvent();
+            bool isOpen() const override;
+            bool pollEvent() override;
 
-            void clean();
+            void clean() override;
             void drawPixelArray(
-                const std::vector<std::vector<Utils::Color>> &pixelsArray);
+                const std::vector<std::vector<Utils::Color>> &pixelsArray) override;
             void display();
-            void saveImage(std::string path) const;
+            void saveImage(std::string path) const override;
         private:
             void drawImage(sf::Vector2f scale);
             sf::Image _image;

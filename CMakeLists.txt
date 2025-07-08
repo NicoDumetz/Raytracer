@@ -24,10 +24,6 @@ include_directories(${TOOLS_DIR})
 file(GLOB_RECURSE CORE_SRC "${SRC_DIR}/*.cpp")
 list(FILTER CORE_SRC EXCLUDE REGEX ".*/Plugins/.*")
 
-# === SFMLRenderer inclus dans le binaire principal ===
-file(GLOB_RECURSE SFML_RENDERER_SRC "${PLUGIN_DIR}/Renders/SFML/*.cpp")
-list(APPEND CORE_SRC ${SFML_RENDERER_SRC})
-
 # === Lib statique pour outils communs (config, math, utils...) ===
 file(GLOB_RECURSE COMMON_SRC
     "${TOOLS_DIR}/*.cpp"
@@ -98,6 +94,13 @@ file(GLOB_RECURSE DIRECTIONAL_SRC "${PLUGIN_DIR}/Light/DirectionnalLight/*.cpp")
 add_library(r_l_directional SHARED ${DIRECTIONAL_SRC})
 set_target_properties(r_l_directional PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
 target_link_libraries(r_l_directional raytracer_common)
+
+# === SFMLRenderer ===
+file(GLOB_RECURSE SFML_RENDERER_SRC "${PLUGIN_DIR}/Renders/SFML/*.cpp")
+add_library(r_r_sfml SHARED ${SFML_RENDERER_SRC})
+set_target_properties(r_r_sfml PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR} PREFIX "")
+target_link_libraries(r_r_sfml raytracer_common)
+
 
 # === CLEAN targets ===
 add_custom_target(my_clean

@@ -45,7 +45,7 @@ void Renderer::SFMLRenderer::clean()
             static_cast<sf::Uint8>(_background.b * 255),
             static_cast<sf::Uint8>(_background.a * 255)
         )
-    );    
+    );
 }
 
 void Renderer::SFMLRenderer::drawPixelArray(const std::vector<std::vector<Utils::Color>> &pixelArray)
@@ -90,4 +90,24 @@ void Renderer::SFMLRenderer::drawImage(sf::Vector2f scale)
 void Renderer::SFMLRenderer::saveImage(std::string path) const
 {
     _image.saveToFile(path);
+}
+
+
+extern "C" {
+
+    extern "C" Renderer::IRenderer *entryPoint()
+    {
+        return new Renderer::SFMLRenderer;
+    }
+
+    RayTracer::Ltype type()
+    {
+        return RayTracer::Ltype::GRAPHIC;
+    }
+
+    const char* name()
+    {
+        return "sfml";
+    }
+
 }
