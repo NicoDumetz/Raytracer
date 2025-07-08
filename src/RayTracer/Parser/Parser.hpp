@@ -77,8 +77,12 @@ namespace RayTracer {
                 float angle = static_cast<float>((double)setting);
                 node.setField("rotateZ", std::to_string(angle));
             }},
+            {"size", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                float size = static_cast<float>((double)setting);
+                node.setField("size", std::to_string(size));
+            }},
         };
-        
+
 
         using MaterialHandler = std::function<void(Utils::ConfigNode&, const libconfig::Setting&)>;
         const std::unordered_map<std::string, MaterialHandler> _materialFieldHandlers = {
