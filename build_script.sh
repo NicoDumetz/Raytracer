@@ -16,6 +16,7 @@ cmake -B $BUILD_DIR -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
 
 echo "Building the project..."
 cmake --build $BUILD_DIR --target all
+cmake --build build --target my_plugins
 
 if [ $? -eq 0 ]; then
     echo "Build completed successfully."
