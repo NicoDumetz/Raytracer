@@ -64,7 +64,7 @@ void RayTracer::Core::run()
 
     for (int y = 0; y < res.height; ++y) {
         for (int x = 0; x < res.width; ++x) {
-            pixelArray[y][x] = lightManager.traceRay(cam.generateRay(x, y), scene, 3);
+            pixelArray[y][x] = lightManager.traceRay(cam.generateRay(x, y), scene, 0);
         }
     }
     _render->openWindow(res.width, res.height, bgColor);
