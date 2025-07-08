@@ -99,9 +99,6 @@ add_executable(raytracer ${CORE_SRC})
 target_link_libraries(raytracer
     raytracer_common
     config++
-    sfml-graphics
-    sfml-window
-    sfml-system
 )
 
 
@@ -112,21 +109,14 @@ target_link_libraries(raytracer
 ##                                                                                    ##
 ########################################################################################
 
-function(add_raytracer_plugin target subdir use_sfml)
+function(add_raytracer_plugin target subdir link_libs)
     file(GLOB_RECURSE SRC "${PLUGIN_DIR}/${subdir}/*.cpp")
     add_library(${target} SHARED ${SRC})
     set_target_properties(${target} PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY ${PLUGINS_DIR}
         PREFIX ""
     )
-    target_link_libraries(${target} raytracer_common)
-    if(${use_sfml})
-        target_link_libraries(${target}
-            sfml-graphics
-            sfml-window
-            sfml-system
-        )
-    endif()
+    target_link_libraries(${target} raytracer_common ${link_libs})
 endfunction()
 
 ########################################################################################
@@ -137,39 +127,39 @@ endfunction()
 ########################################################################################
 
 # ╭────────────── 🔷 PRIMITIVES ──────────────╮
-add_raytracer_plugin(r_p_sphere           "Primitives/Sphere"           OFF)
-add_raytracer_plugin(r_p_plane            "Primitives/Plane"            OFF)
-add_raytracer_plugin(r_p_cone             "Primitives/Cone"             OFF)
-add_raytracer_plugin(r_p_cylinder         "Primitives/Cylinder"         OFF)
-add_raytracer_plugin(r_p_triangles        "Primitives/Triangles"        OFF)
-add_raytracer_plugin(r_p_Cube             "Primitives/Cube"             OFF)
-add_raytracer_plugin(r_p_LimitedCone      "Primitives/LimitedCone"      OFF)
-add_raytracer_plugin(r_p_LimitedCylinder  "Primitives/LimitedCylinder"  OFF)
-add_raytracer_plugin(r_p_Torus            "Primitives/Torus"            OFF)
+add_raytracer_plugin(r_p_sphere           "Primitives/Sphere"           "")
+add_raytracer_plugin(r_p_plane            "Primitives/Plane"            "")
+add_raytracer_plugin(r_p_cone             "Primitives/Cone"             "")
+add_raytracer_plugin(r_p_cylinder         "Primitives/Cylinder"         "")
+add_raytracer_plugin(r_p_triangles        "Primitives/Triangles"        "")
+add_raytracer_plugin(r_p_Cube             "Primitives/Cube"             "")
+add_raytracer_plugin(r_p_LimitedCone      "Primitives/LimitedCone"      "")
+add_raytracer_plugin(r_p_LimitedCylinder  "Primitives/LimitedCylinder"  "")
+add_raytracer_plugin(r_p_Torus            "Primitives/Torus"            "")
 # ╰───────────────────────────────────────────╯
 
 # ╭──────────────── 🎥 CAMERA ────────────────╮
-add_raytracer_plugin(r_c_camera           "Camera"                      OFF)
+add_raytracer_plugin(r_c_camera           "Camera"                      "")
 # ╰───────────────────────────────────────────╯
 
 # ╭─────────────── 🎨 MATERIALS ──────────────╮
-add_raytracer_plugin(r_m_flatcolor        "Material/FlatColor"          OFF)
-add_raytracer_plugin(r_m_Checkboard       "Material/Checkboard"         OFF)
-add_raytracer_plugin(r_m_glass            "Material/Glass"              OFF)
-add_raytracer_plugin(r_m_perlin           "Material/Perlin"             OFF)
-add_raytracer_plugin(r_m_mirror           "Material/Mirror"             OFF)
-add_raytracer_plugin(r_m_transparent      "Material/Transparent"        OFF)
-add_raytracer_plugin(r_m_gradient         "Material/Gradient"           OFF)
+add_raytracer_plugin(r_m_flatcolor        "Material/FlatColor"          "")
+add_raytracer_plugin(r_m_Checkboard       "Material/Checkboard"         "")
+add_raytracer_plugin(r_m_glass            "Material/Glass"              "")
+add_raytracer_plugin(r_m_perlin           "Material/Perlin"             "")
+add_raytracer_plugin(r_m_mirror           "Material/Mirror"             "")
+add_raytracer_plugin(r_m_transparent      "Material/Transparent"        "")
+add_raytracer_plugin(r_m_gradient         "Material/Gradient"           "")
 # ╰───────────────────────────────────────────╯
 
 # ╭──────────────── 💡 LIGHTS ───────────────╮
-add_raytracer_plugin(r_l_ambient          "Light/AmbientLight"          OFF)
-add_raytracer_plugin(r_l_directional      "Light/DirectionnalLight"     OFF)
-add_raytracer_plugin(r_l_pointLight       "Light/PointLight"            OFF)
+add_raytracer_plugin(r_l_ambient          "Light/AmbientLight"          "")
+add_raytracer_plugin(r_l_directional      "Light/DirectionnalLight"     "")
+add_raytracer_plugin(r_l_pointLight       "Light/PointLight"            "")
 # ╰──────────────────────────────────────────╯
 
 # ╭────────────── 🖼️ RENDERER ───────────────╮
-add_raytracer_plugin(r_r_sfml             "Renders/SFML"                ON)
+add_raytracer_plugin(r_r_sfml     "Renders/SFML"  "sfml-graphics;sfml-window;sfml-system")
 # ╰──────────────────────────────────────────╯
 
 ########################################################################################
