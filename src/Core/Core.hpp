@@ -18,6 +18,7 @@
 #include <regex>
 #include <string>
 #include <thread>
+#include <chrono>
 
 #define PLUGIN_PATH std::string("./plugins/")
 
