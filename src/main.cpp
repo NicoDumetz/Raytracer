@@ -25,20 +25,12 @@ int main(int ac, char **av, char **env)
         const Utils::Color& bgColor = scene.getBackgroundColor();
 
         RayTracer::LightManager lightManager;
-        std::vector<std::vector<Utils::HitRecord>> hitArray(res.height, std::vector<Utils::HitRecord>(res.width));
+        std::vector<std::vector<Utils::Color>> pixelArray(res.height, std::vector<Utils::Color>(res.width));
 
         // === TRACER LES RAYONS ===
         for (int y = 0; y < res.height; ++y) {
             for (int x = 0; x < res.width; ++x) {
-                Utils::Ray ray = cam.generateRay(x, y);
-                Utils::HitRecord record;
-                if (scene.trace(ray, record)) {
-                    Utils::Color color = lightManager.computeDirectLighting(record, scene);
-                    record.setColor(color);
-                    hitArray[y][x] = record;
-                } else {
-                    hitArray[y][x] = Utils::HitRecord();
-                }
+                pixelArray[y][x] = lightManager.traceRay(cam.generateRay(x, y), scene, 3);
             }
         }
 
@@ -48,15 +40,7 @@ int main(int ac, char **av, char **env)
         while (sfml.isOpen()) {
             while (sfml.pollEvent()) {}
             sfml.clean();
-            std::vector<std::vector<Utils::Color>> colorArray(res.height, std::vector<Utils::Color>(res.width));
-
-            for (int y = 0; y < res.height; ++y) {
-                for (int x = 0; x < res.width; ++x) {
-                    colorArray[y][x] = hitArray[y][x].getColor();
-                }
-            }
-
-            sfml.drawPixelArray(colorArray);
+            sfml.drawPixelArray(pixelArray);
             sfml.display();
         }
 

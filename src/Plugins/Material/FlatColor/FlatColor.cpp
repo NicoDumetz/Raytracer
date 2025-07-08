@@ -22,6 +22,7 @@ namespace Material
 Material::FlatColor::FlatColor(const Utils::ConfigNode& node)
     : _color(node.parseColor("color"))
 {
+    std::cout << "FlatColor created with color: " << _color << std::endl;
 }
 
 extern "C" {
