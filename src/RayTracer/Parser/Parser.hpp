@@ -53,6 +53,15 @@ namespace RayTracer {
                 float height = static_cast<float>(static_cast<int>(setting));
                 node.setField("height", std::to_string(height));
             }},
+            {"a", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("a", formatVector(setting));
+            }},
+            {"b", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("b", formatVector(setting));
+            }},
+            {"c", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
+                node.setField("c", formatVector(setting));
+            }},
             {"translate", [](Utils::ConfigNode& node, const libconfig::Setting& setting) {
                 node.setField("translate", formatVector(setting));
             }},
@@ -69,6 +78,7 @@ namespace RayTracer {
                 node.setField("rotateZ", std::to_string(angle));
             }},
         };
+        
 
         using MaterialHandler = std::function<void(Utils::ConfigNode&, const libconfig::Setting&)>;
         const std::unordered_map<std::string, MaterialHandler> _materialFieldHandlers = {
